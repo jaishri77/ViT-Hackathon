@@ -1,14 +1,11 @@
 package com.sfl.aegisbackend.controller;
 
 import com.sfl.aegisbackend.AegisResponse;
+import com.sfl.aegisbackend.model.TradeResult;
 import com.sfl.aegisbackend.service.AutonomousAgentService;
 import com.sfl.aegisbackend.service.MemoryService;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/aegis")
@@ -58,5 +55,63 @@ public class AegisController {
     public Object getMemory() {
 
         return memory.getMemories();
+    }
+
+    // =====================================================
+    // GET CURRENT EXPOSURE
+    // =====================================================
+
+    @GetMapping("/exposure")
+    public double getExposure() {
+
+        return memory.getCurrentExposure();
+    }
+
+    // =====================================================
+    // POST TRADE
+    // =====================================================
+
+    @PostMapping("/trade")
+    public TradeResult saveTrade(
+            @RequestBody TradeResult trade
+    ) {
+
+        // Only process executed trades
+        if (!"EXECUTED".equalsIgnoreCase(
+                trade.getStatus()
+        )) {
+
+            return trade;
+        }
+
+        // ==========================================
+        // BUY
+        // ==========================================
+
+        if ("BUY".equalsIgnoreCase(
+                trade.getAction()
+        )) {
+
+            memory.recordBuy(
+                    trade.getAllocation(),
+                    trade.getExecutionPrice()
+            );
+        }
+
+        // ==========================================
+        // SELL
+        // ==========================================
+
+        else if ("SELL".equalsIgnoreCase(
+                trade.getAction()
+        )) {
+
+            memory.recordSell(
+                    trade.getAllocation(),
+                    trade.getExecutionPrice()
+            );
+        }
+
+        return trade;
     }
 }
