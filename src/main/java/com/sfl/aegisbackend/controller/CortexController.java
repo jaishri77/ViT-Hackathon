@@ -1,9 +1,6 @@
-package com.aegis.backend.controller;
+package com.sfl.aegisbackend.controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,8 +10,9 @@ import java.util.Map;
 public class CortexController {
 
     @GetMapping("/dashboard")
-    public Map<String, String> getDashboard() {
-        Map<String, String> data = new HashMap<>();
+    public Map<String, Object> getDashboardData() {
+        Map<String, Object> data = new HashMap<>();
+        
         data.put("portfolioValue", "$1,284,902.45");
         data.put("availableCapital", "$412,055.10");
         data.put("todayPnL", "+$14,202.12");
@@ -27,6 +25,15 @@ public class CortexController {
         data.put("expectedReturn", "+4.8%");
         data.put("downside", "-1.4%");
         data.put("allocation", "25.0%");
+        
         return data;
+    }
+
+    @PostMapping("/execute")
+    public Map<String, String> executeDirective(@RequestBody(required = false) Map<String, Object> payload) {
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "SUCCESS");
+        response.put("message", "Directive successfully executed!");
+        return response;
     }
 }
