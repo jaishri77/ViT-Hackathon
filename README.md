@@ -130,7 +130,16 @@ Monitors the execution process after a trading decision has been generated.<br>
 Responsibilities:<br>
 Order monitoring<br>
 Execution tracking<br>
-Trade execution management<br>
+Trade execution management<br
+
+## Technology Stack:
+Frontend:
+HTML
+CSS
+Javascript
+Tailwind CSS
+Google stitch
+
 
 
 ## Conclusion:
