@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Decision Center | CORTEX</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #050505;
+            --surface: #0f0f0f;
+            --card: #161616;
+            --border: rgba(255, 255, 255, 0.07);
+            --cyan: #00f0ff;
+            --emerald: #10b981;
+            --rose: #f43f5e;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: #e2e8f0; overflow: hidden; }
+        .font-mono { font-family: 'JetBrains+Mono', monospace; }
+        
+        .glass-panel { background: var(--card); border: 1px solid var(--border); border-radius: 16px; }
+        
+        .decision-glow {
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.15);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+        }
+
+        .pipeline-arrow::after {
+            content: '→';
+            margin: 0 1rem;
+            color: #444;
+            font-weight: 200;
+        }
+        .pipeline-arrow:last-child::after { content: ''; }
+
+        .score-bar { height: 4px; border-radius: 2px; background: rgba(255,255,255,0.05); overflow: hidden; }
+        .score-fill-cyan { background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+        .score-fill-rose { background: var(--rose); box-shadow: 0 0 10px var(--rose); }
+
+        /* Sidebar Styling */
+        .sidebar-active { background: rgba(0, 240, 255, 0.1); color: var(--cyan); border-right: 3px solid var(--cyan); }
+    </style>
+</head>
+<body class="flex h-screen">
+
+    <!-- SIDEBAR NAVIGATION (Consistent with design system) -->
+    <aside class="w-64 border-r border-white/5 bg-[#080808] flex flex-col">
+        <div class="p-6">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-cyan-500 rounded flex items-center justify-center shadow-[0_0_15px_rgba(0,240,255,0.3)]">
+                    <i data-lucide="brain-circuit" class="text-black w-5 h-5"></i>
+                </div>
+                <h1 class="text-xl font-bold tracking-tighter text-white">CORTEX</h1>
+            </div>
+        </div>
+        <nav class="flex-1 py-4 text-sm font-medium text-gray-500">
+            <div class="flex items-center gap-3 px-6 py-3 hover:bg-white/5 cursor-pointer"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Command Center</div>
+            <div class="flex items-center gap-3 px-6 py-3 hover:bg-white/5 cursor-pointer"><i data-lucide="activity" class="w-4 h-4"></i> Live Market</div>
+            <div class="sidebar-active flex items-center gap-3 px-6 py-3 cursor-pointer"><i data-lucide="brain" class="w-4 h-4"></i> AI Decisions</div>
+            <div class="flex items-center gap-3 px-6 py-3 hover:bg-white/5 cursor-pointer"><i data-lucide="shield-check" class="w-4 h-4"></i> Risk Center</div>
+            <div class="flex items-center gap-3 px-6 py-3 hover:bg-white/5 cursor-pointer"><i data-lucide="cpu" class="w-4 h-4"></i> AI Agents</div>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 flex flex-col overflow-hidden">
+        
+        <!-- HEADER -->
+        <header class="h-20 border-b border-white/5 flex items-center justify-between px-10 bg-[#080808]/50">
+            <div class="flex items-center gap-10">
+                <div class="font-mono">
+                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Decision ID</p>
+                    <p class="text-sm text-cyan-500 font-bold">DEC-942-X881</p>
+                </div>
+                <div class="font-mono border-l border-white/10 pl-10">
+                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Timestamp</p>
+                    <p class="text-sm text-white">2026-08-28 15:22:04.12</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-2 bg-emerald-500/10 px-4 py-2 rounded-full border border-emerald-500/20">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">Engine Status: Optimal</span>
+                </div>
+                <div class="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Market State: Trending</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-10">
+            <div class="grid grid-cols-12 gap-8">
+                
+                <!-- LEFT COLUMN: ANALYSIS -->
+                <div class="col-span-4 space-y-8">
+                    
+                    <!-- ASSET ANALYSIS -->
+                    <div class="glass-panel p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Asset Analysis</h3>
+                            <span class="text-white font-bold">BTC/USD</span>
+                        </div>
+                        <div class="space-y-4 font-mono text-sm">
+                            <div class="flex justify-between border-b border-white/5 pb-2">
+                                <span class="text-gray-500">Current Price</span>
+                                <span class="text-white">$64,502.10</span>
+                            </div>
+                            <div class="flex justify-between border-b border-white/5 pb-2">
+                                <span class="text-gray-500">Momentum</span>
+                                <span class="text-emerald-400">+14.2%</span>
+                            </div>
+                            <div class="flex justify-between border-b border-white/5 pb-2">
+                                <span class="text-gray-500">Vol (24h)</span>
+                                <span class="text-white">$4.22B</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">Volatility</span>
+                                <span class="text-amber-500">12.4%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- OPPORTUNITY BREAKDOWN -->
+                    <div class="glass-panel p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Opportunity Score</h3>
+                            <span class="text-2xl font-black text-cyan-500 font-mono">88<span class="text-xs">/100</span></span>
+                        </div>
+                        <div class="space-y-5 mt-6">
+                            <div>
+                                <div class="flex justify-between text-[10px] uppercase font-bold text-gray-500 mb-1"><span>Expected Return</span><span>+4.8%</span></div>
+                                <div class="score-bar"><div class="h-full score-fill-cyan" style="width: 85%"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] uppercase font-bold text-gray-500 mb-1"><span>News Sentiment</span><span>Bullish</span></div>
+                                <div class="score-bar"><div class="h-full score-fill-cyan" style="width: 78%"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] uppercase font-bold text-gray-500 mb-1"><span>Liquidity Depth</span><span>High</span></div>
+                                <div class="score-bar"><div class="h-full score-fill-cyan" style="width: 92%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RISK BREAKDOWN -->
+                    <div class="glass-panel p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Risk Score</h3>
+                            <span class="text-2xl font-black text-rose-500 font-mono">24<span class="text-xs">/100</span></span>
+                        </div>
+                        <div class="space-y-5 mt-6">
+                            <div>
+                                <div class="flex justify-between text-[10px] uppercase font-bold text-gray-500 mb-1"><span>Volatility Risk</span><span>Low</span></div>
+                                <div class="score-bar"><div class="h-full score-fill-rose" style="width: 15%"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] uppercase font-bold text-gray-500 mb-1"><span>Downside Risk</span><span>-1.2%</span></div>
+                                <div class="score-bar"><div class="h-full score-fill-rose" style="width: 22%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CENTER: THE BIG DECISION -->
+                <div class="col-span-8 flex flex-col gap-8">
+                    
+                    <div class="glass-panel decision-glow flex-1 flex flex-col items-center justify-center p-12 text-center relative overflow-hidden">
+                        <!-- Background Pattern -->
+                        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(var(--cyan) 1px, transparent 0); background-size: 40px 40px;"></div>
+                        
+                        <p class="text-xs font-black uppercase tracking-[0.4em] text-cyan-500 mb-4">Autonomous AI Directive</p>
+                        <h2 class="text-[120px] font-black italic tracking-tighter text-white leading-none mb-6">BUY</h2>
+                        
+                        <div class="grid grid-cols-4 gap-12 mt-8 w-full max-w-2xl font-mono">
+                            <div>
+                                <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Confidence</p>
+                                <p class="text-2xl font-bold text-white">94.2%</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Exp. Return</p>
+                                <p class="text-2xl font-bold text-emerald-400">+4.8%</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Downside</p>
+                                <p class="text-2xl font-bold text-rose-500">-1.4%</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Allocation</p>
+                                <p class="text-2xl font-bold text-cyan-400">25.0%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-8">
+                        <!-- AI REASONING -->
+                        <div class="glass-panel p-8">
+                            <h3 class="text-xs font-bold text-white uppercase tracking-widest mb-6">Logical Reasoning</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-emerald-500 mt-1">✓</span>
+                                    <p class="text-sm text-gray-300">Bullish news sentiment (82%) detected across institutional feeds.</p>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-emerald-500 mt-1">✓</span>
+                                    <p class="text-sm text-gray-300">Orderbook depth confirms low slippage for 25% capital entry.</p>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-rose-500 mt-1">⚠️</span>
+                                    <p class="text-sm text-gray-300">Moderate volatility spike in M1 timeframe; scaling execution speed.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DECISION PIPELINE -->
+                        <div class="glass-panel p-8 flex flex-col justify-center">
+                            <h3 class="text-xs font-bold text-white uppercase tracking-widest mb-8">Process Pipeline</h3>
+                            <div class="flex flex-wrap items-center gap-y-4 text-[10px] font-black tracking-widest text-gray-500 uppercase">
+                                <span class="text-cyan-500 border-b border-cyan-500 pb-1">Observe</span>
+                                <span class="pipeline-arrow"></span>
+                                <span class="text-cyan-500 border-b border-cyan-500 pb-1">Interpret</span>
+                                <span class="pipeline-arrow"></span>
+                                <span class="text-cyan-500 border-b border-cyan-500 pb-1">Detect</span>
+                                <span class="pipeline-arrow"></span>
+                                <span class="text-cyan-500 border-b border-cyan-500 pb-1">Assess Risk</span>
+                                <span class="pipeline-arrow"></span>
+                                <span class="text-white border-b-2 border-white pb-1">Allocate</span>
+                                <span class="pipeline-arrow"></span>
+                                <span class="opacity-30">Execute</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER BAR -->
+        <footer class="h-16 border-t border-white/5 bg-black/50 px-10 flex items-center justify-between">
+            <p class="text-xs font-bold text-gray-500 italic">"Why did the AI make this decision? Reasoning is derived from 42 correlated market features and institutional sentiment vectors."</p>
+            <div class="flex gap-4">
+                <button class="px-6 py-2 bg-white/5 hover:bg-white/10 rounded font-bold text-[10px] uppercase tracking-widest transition-all">Download Audit Log</button>
+                <button class="px-6 py-2 bg-cyan-500 text-black rounded font-black text-[10px] uppercase tracking-widest">Execute Directive</button>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

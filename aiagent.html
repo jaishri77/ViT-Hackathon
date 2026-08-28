@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent Control Center | CORTEX</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #050505;
+            --surface: #0f0f0f;
+            --card: #141414;
+            --border: rgba(255, 255, 255, 0.05);
+            --cyan: #00f0ff;
+            --emerald: #10b981;
+            --violet: #8b5cf6;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: #e2e8f0; overflow-x: hidden; }
+        .font-mono { font-family: 'JetBrains+Mono', monospace; }
+
+        .agent-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .agent-card:hover {
+            border-color: rgba(0, 240, 255, 0.3);
+            background: #181818;
+            transform: translateY(-2px);
+        }
+
+        /* Scanline Animation for "Processing" state */
+        .processing-glow::after {
+            content: "";
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(0, 240, 255, 0.05), transparent);
+            animation: scanline 3s linear infinite;
+        }
+        @keyframes scanline {
+            0% { top: -100%; }
+            100% { top: 100%; }
+        }
+
+        /* Animated Flow Lines */
+        .flow-line {
+            stroke-dasharray: 10;
+            animation: dash 20s linear infinite;
+        }
+        @keyframes dash {
+            to { stroke-dashoffset: -1000; }
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .dot-online { background: var(--emerald); box-shadow: 0 0 10px var(--emerald); }
+
+        .sidebar-active { background: rgba(0, 240, 255, 0.1); color: var(--cyan); border-right: 3px solid var(--cyan); }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 border-r border-white/5 bg-[#080808] flex flex-col z-50">
+        <div class="p-6">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-cyan-500 rounded flex items-center justify-center shadow-[0_0_15px_rgba(0,240,255,0.3)]">
+                    <i data-lucide="brain-circuit" class="text-black w-5 h-5"></i>
+                </div>
+                <h1 class="text-xl font-bold tracking-tighter text-white">CORTEX</h1>
+            </div>
+        </div>
+        <nav class="flex-1 py-4 text-sm font-medium text-gray-500">
+            <div class="px-6 py-3 hover:bg-white/5 cursor-pointer flex items-center gap-3"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Command Center</div>
+            <div class="px-6 py-3 hover:bg-white/5 cursor-pointer flex items-center gap-3"><i data-lucide="activity" class="w-4 h-4"></i> Live Market</div>
+            <div class="px-6 py-3 hover:bg-white/5 cursor-pointer flex items-center gap-3"><i data-lucide="brain" class="w-4 h-4"></i> AI Decisions</div>
+            <div class="sidebar-active px-6 py-3 flex items-center gap-3"><i data-lucide="cpu" class="w-4 h-4"></i> AI Agents</div>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 flex flex-col overflow-y-auto relative">
+        
+        <!-- HEADER -->
+        <header class="h-16 border-b border-white/5 flex items-center justify-between px-8 sticky top-0 bg-black/80 backdrop-blur-md z-40">
+            <div class="flex items-center gap-6">
+                <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Multi-Agent Control Center</h2>
+                <div class="h-4 w-[1px] bg-white/10"></div>
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] font-bold text-gray-500 uppercase">Autonomy Status:</span>
+                    <span class="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 uppercase tracking-tighter">Fully Autonomous</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="text-[10px] font-mono text-gray-500">Kernel: MM-OS-v2.6</span>
+            </div>
+        </header>
+
+        <div class="p-8 space-y-12">
+            
+            <!-- AGENT GRID -->
+            <div class="grid grid-cols-3 gap-6">
+                
+                <!-- Agent 1: Market Perception -->
+                <div class="agent-card processing-glow p-5">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-cyan-500/10 rounded-lg"><i data-lucide="eye" class="w-5 h-5 text-cyan-500"></i></div>
+                        <div class="flex items-center gap-2">
+                            <span class="status-dot dot-online"></span>
+                            <span class="text-[9px] font-bold text-gray-400 uppercase font-mono">Perceiving</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xs font-bold text-white uppercase mb-1">Market Perception Agent</h3>
+                    <p class="text-[10px] text-gray-500 mb-4 h-8">Continuously monitors price, volume, volatility, and liquidity across 42 exchange orderbooks.</p>
+                    <div class="space-y-2 pt-4 border-t border-white/5 font-mono text-[10px]">
+                        <div class="flex justify-between"><span>Confidence</span><span class="text-white">99.8%</span></div>
+                        <div class="flex justify-between text-gray-500"><span>Last Update</span><span>0.12s ago</span></div>
+                        <div class="flex justify-between"><span>Current Task</span><span class="text-cyan-400 italic">Scanning Orderbooks</span></div>
+                    </div>
+                </div>
+
+                <!-- Agent 2: News Intelligence -->
+                <div class="agent-card processing-glow p-5">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-violet-500/10 rounded-lg"><i data-lucide="newspaper" class="w-5 h-5 text-violet-500"></i></div>
+                        <div class="flex items-center gap-2">
+                            <span class="status-dot dot-online"></span>
+                            <span class="text-[9px] font-bold text-gray-400 uppercase font-mono">NLP Parsing</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xs font-bold text-white uppercase mb-1">News Intelligence Agent</h3>
+                    <p class="text-[10px] text-gray-500 mb-4 h-8">Analyzes global news feeds and social sentiment for high-impact financial vectors.</p>
+                    <div class="space-y-2 pt-4 border-t border-white/5 font-mono text-[10px]">
+                        <div class="flex justify-between"><span>Confidence</span><span class="text-white">92.4%</span></div>
+                        <div class="flex justify-between text-gray-500"><span>Last Update</span><span>4s ago</span></div>
+                        <div class="flex justify-between"><span>Current Task</span><span class="text-violet-400 italic">Scoring Reuters Feed</span></div>
+                    </div>
+                </div>
+
+                <!-- Agent 3: Opportunity Agent -->
+                <div class="agent-card p-5">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-amber-500/10 rounded-lg"><i data-lucide="crosshair" class="w-5 h-5 text-amber-500"></i></div>
+                        <div class="flex items-center gap-2">
+                            <span class="status-dot dot-online"></span>
+                            <span class="text-[9px] font-bold text-gray-400 uppercase font-mono">Scanning</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xs font-bold text-white uppercase mb-1">Opportunity Agent</h3>
+                    <p class="text-[10px] text-gray-500 mb-4 h-8">Identifies and ranks potential financial opportunities based on correlated market data.</p>
+                    <div class="space-y-2 pt-4 border-t border-white/5 font-mono text-[10px]">
+                        <div class="flex justify-between"><span>Confidence</span><span class="text-white">88.1%</span></div>
+                        <div class="flex justify-between text-gray-500"><span>Last Update</span><span>2s ago</span></div>
+                        <div class="flex justify-between"><span>Current Task</span><span class="text-amber-400 italic">Ranking BTC/USD Bull-Flag</span></div>
+                    </div>
+                </div>
+
+                <!-- Agent 4: Risk Management -->
+                <div class="agent-card p-5">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-rose-500/10 rounded-lg"><i data-lucide="shield-check" class="w-5 h-5 text-rose-500"></i></div>
+                        <div class="flex items-center gap-2">
+                            <span class="status-dot dot-online"></span>
+                            <span class="text-[9px] font-bold text-gray-400 uppercase font-mono">Monitoring</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xs font-bold text-white uppercase mb-1">Risk Management Agent</h3>
+                    <p class="text-[10px] text-gray-500 mb-4 h-8">Evaluates volatility, downside, exposure, and risk constraints before any action is approved.</p>
+                    <div class="space-y-2 pt-4 border-t border-white/5 font-mono text-[10px]">
+                        <div class="flex justify-between"><span>Confidence</span><span class="text-white">99.9%</span></div>
+                        <div class="flex justify-between text-gray-500"><span>Last Update</span><span>0.5s ago</span></div>
+                        <div class="flex justify-between"><span>Current Task</span><span class="text-rose-400 italic">Calculating VaR</span></div>
+                    </div>
+                </div>
+
+                <!-- Agent 5: Capital Allocation -->
+                <div class="agent-card p-5">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-emerald-500/10 rounded-lg"><i data-lucide="pie-chart" class="w-5 h-5 text-emerald-500"></i></div>
+                        <div class="flex items-center gap-2">
+                            <span class="status-dot dot-online"></span>
+                            <span class="text-[9px] font-bold text-gray-400 uppercase font-mono">Calculating</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xs font-bold text-white uppercase mb-1">Capital Allocation Agent</h3>
+                    <p class="text-[10px] text-gray-500 mb-4 h-8">Determines how much capital should be allocated to each opportunity based on risk profile.</p>
+                    <div class="space-y-2 pt-4 border-t border-white/5 font-mono text-[10px]">
+                        <div class="flex justify-between"><span>Confidence</span><span class="text-white">95.0%</span></div>
+                        <div class="flex justify-between text-gray-500"><span>Last Update</span><span>5s ago</span></div>
+                        <div class="flex justify-between"><span>Current Task</span><span class="text-emerald-400 italic">Sizing BTC Position</span></div>
+                    </div>
+                </div>
+
+                <!-- Agent 6: Execution Agent -->
+                <div class="agent-card p-5">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-blue-500/10 rounded-lg"><i data-lucide="zap" class="w-5 h-5 text-blue-500"></i></div>
+                        <div class="flex items-center gap-2">
+                            <span class="status-dot dot-online"></span>
+                            <span class="text-[9px] font-bold text-gray-400 uppercase font-mono">Routing</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xs font-bold text-white uppercase mb-1">Execution Agent</h3>
+                    <p class="text-[10px] text-gray-500 mb-4 h-8">Evaluates execution cost, liquidity, and slippage to ensure high-fidelity trade entry.</p>
+                    <div class="space-y-2 pt-4 border-t border-white/5 font-mono text-[10px]">
+                        <div class="flex justify-between"><span>Confidence</span><span class="text-white">91.7%</span></div>
+                        <div class="flex justify-between text-gray-500"><span>Last Update</span><span>0.2s ago</span></div>
+                        <div class="flex justify-between"><span>Current Task</span><span class="text-blue-400 italic">Optimizing Slippage</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CENTRAL VISUAL WORKFLOW (SVG) -->
+            <div class="relative bg-white/[0.02] border border-white/5 rounded-3xl p-12 overflow-hidden">
+                <div class="absolute inset-0 pointer-events-none">
+                    <svg width="100%" height="100%" viewBox="0 0 1000 300">
+                        <path class="flow-line" d="M 50 150 L 950 150" stroke="rgba(0, 240, 255, 0.1)" stroke-width="2" fill="none" />
+                        <path class="flow-line" d="M 150 150 Q 500 50 850 150" stroke="rgba(139, 92, 246, 0.1)" stroke-width="1" fill="none" />
+                    </svg>
+                </div>
+
+                <div class="flex justify-between items-center relative z-10 gap-2">
+                    <div class="flex flex-col items-center gap-2 text-center w-24">
+                        <div class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-500"><i data-lucide="database" class="w-5 h-5"></i></div>
+                        <p class="text-[9px] font-black tracking-tighter text-gray-400 uppercase">Real-Time Data</p>
+                    </div>
+                    <i data-lucide="chevron-right" class="text-gray-800"></i>
+                    <div class="flex flex-col items-center gap-2 text-center w-24">
+                        <div class="w-10 h-10 rounded-full border border-cyan-500/20 bg-cyan-500/5 flex items-center justify-center text-cyan-400"><i data-lucide="eye" class="w-5 h-5"></i></div>
+                        <p class="text-[9px] font-black tracking-tighter text-cyan-400 uppercase">Perception</p>
+                    </div>
+                    <i data-lucide="chevron-right" class="text-gray-800"></i>
+                    <div class="flex flex-col items-center gap-2 text-center w-24">
+                        <div class="w-10 h-10 rounded-full border border-violet-500/20 bg-violet-500/5 flex items-center justify-center text-violet-400"><i data-lucide="newspaper" class="w-5 h-5"></i></div>
+                        <p class="text-[9px] font-black tracking-tighter text-violet-400 uppercase">Intelligence</p>
+                    </div>
+                    <i data-lucide="chevron-right" class="text-gray-800"></i>
+                    <div class="flex flex-col items-center gap-2 text-center w-24">
+                        <div class="w-10 h-10 rounded-full border border-amber-500/20 bg-amber-500/5 flex items-center justify-center text-amber-400"><i data-lucide="crosshair" class="w-5 h-5"></i></div>
+                        <p class="text-[9px] font-black tracking-tighter text-amber-400 uppercase">Opportunity</p>
+                    </div>
+                    <i data-lucide="chevron-right" class="text-gray-800"></i>
+                    <div class="flex flex-col items-center gap-2 text-center w-24">
+                        <div class="w-10 h-10 rounded-full border border-rose-500/20 bg-rose-500/5 flex items-center justify-center text-rose-400"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
+                        <p class="text-[9px] font-black tracking-tighter text-rose-400 uppercase">Risk</p>
+                    </div>
+                    <i data-lucide="chevron-right" class="text-gray-800"></i>
+                    <div class="flex flex-col items-center gap-2 text-center w-24">
+                        <div class="w-10 h-10 rounded-full border border-emerald-500/20 bg-emerald-500/5 flex items-center justify-center text-emerald-400"><i data-lucide="pie-chart" class="w-5 h-5"></i></div>
+                        <p class="text-[9px] font-black tracking-tighter text-emerald-400 uppercase">Allocation</p>
+                    </div>
+                    <i data-lucide="chevron-right" class="text-gray-800"></i>
+                    <div class="flex flex-col items-center gap-2 text-center w-24">
+                        <div class="w-10 h-10 rounded-full border border-blue-500/20 bg-blue-500/5 flex items-center justify-center text-blue-400"><i data-lucide="zap" class="w-5 h-5"></i></div>
+                        <p class="text-[9px] font-black tracking-tighter text-blue-400 uppercase">Execution</p>
+                    </div>
+                    <i data-lucide="chevron-right" class="text-gray-800"></i>
+                    <div class="flex flex-col items-center gap-2 text-center w-24">
+                        <div class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-300"><i data-lucide="refresh-cw" class="w-5 h-5"></i></div>
+                        <p class="text-[9px] font-black tracking-tighter text-gray-300 uppercase">Adaptation</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTTOM STATUS BAR -->
+            <div class="glass-panel p-8 bg-white/[0.01] border border-white/5 rounded-3xl flex justify-between items-center">
+                <div class="flex items-center gap-10">
+                    <div>
+                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-[0.2em] mb-1">Final Decision Matrix</p>
+                        <h4 class="text-3xl font-black italic tracking-tighter text-white">AUTONOMOUS: <span class="text-emerald-500">BUY / ACCUMULATE</span></h4>
+                    </div>
+                    <div class="h-10 w-[1px] bg-white/10"></div>
+                    <div>
+                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-[0.2em] mb-1">Target Asset</p>
+                        <h4 class="text-2xl font-bold font-mono text-white tracking-tighter uppercase">BTC/USD</h4>
+                    </div>
+                </div>
+                <div class="flex items-center gap-6">
+                    <div class="text-right">
+                        <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Process Throughput</p>
+                        <p class="text-xl font-mono text-cyan-400 font-bold tracking-tighter">1.2ms / cycle</p>
+                    </div>
+                    <div class="bg-cyan-500 text-black px-6 py-3 rounded-xl font-black uppercase tracking-[0.2em] text-xs">
+                        Kernel Operating
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
