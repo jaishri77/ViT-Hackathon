@@ -1,254 +1,2293 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Decision Center | CORTEX</title>
+
+    <title>AI Decisions | CORTEX</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
     <style>
+
         :root {
             --bg: #050505;
             --surface: #0f0f0f;
-            --card: #161616;
-            --border: rgba(255, 255, 255, 0.07);
+            --card: #141414;
+            --border: rgba(255,255,255,0.06);
+
             --cyan: #00f0ff;
-            --emerald: #10b981;
-            --rose: #f43f5e;
-        }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: #e2e8f0; overflow: hidden; }
-        .font-mono { font-family: 'JetBrains+Mono', monospace; }
-        
-        .glass-panel { background: var(--card); border: 1px solid var(--border); border-radius: 16px; }
-        
-        .decision-glow {
-            box-shadow: 0 0 40px rgba(0, 240, 255, 0.15);
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+            --green: #10b981;
+            --red: #f43f5e;
+            --amber: #f59e0b;
+            --violet: #8b5cf6;
         }
 
-        .pipeline-arrow::after {
-            content: '→';
-            margin: 0 1rem;
-            color: #444;
-            font-weight: 200;
+        * {
+            box-sizing: border-box;
         }
-        .pipeline-arrow:last-child::after { content: ''; }
 
-        .score-bar { height: 4px; border-radius: 2px; background: rgba(255,255,255,0.05); overflow: hidden; }
-        .score-fill-cyan { background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
-        .score-fill-rose { background: var(--rose); box-shadow: 0 0 10px var(--rose); }
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
 
-        /* Sidebar Styling */
-        .sidebar-active { background: rgba(0, 240, 255, 0.1); color: var(--cyan); border-right: 3px solid var(--cyan); }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .glass-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+        }
+
+        .sidebar-item {
+            transition: 0.2s;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(0,240,255,0.05);
+            color: var(--cyan);
+        }
+
+        .sidebar-active {
+            background: rgba(0,240,255,0.1);
+            color: var(--cyan);
+            border-right: 3px solid var(--cyan);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .online {
+            background: var(--green);
+            box-shadow: 0 0 10px var(--green);
+        }
+
+        .offline {
+            background: var(--red);
+            box-shadow: 0 0 10px var(--red);
+        }
+
+        .decision-card {
+            background: linear-gradient(
+                145deg,
+                rgba(0,240,255,0.07),
+                rgba(255,255,255,0.02)
+            );
+
+            border: 1px solid rgba(0,240,255,0.25);
+            border-radius: 20px;
+
+            box-shadow:
+                0 0 35px rgba(0,240,255,0.06);
+        }
+
+        .decision-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 12px 22px;
+
+            border-radius: 10px;
+
+            font-size: 22px;
+            font-weight: 900;
+
+            letter-spacing: 0.04em;
+        }
+
+        .buy {
+            color: var(--green);
+            background: rgba(16,185,129,0.12);
+            border: 1px solid rgba(16,185,129,0.5);
+        }
+
+        .sell {
+            color: var(--red);
+            background: rgba(244,63,94,0.12);
+            border: 1px solid rgba(244,63,94,0.5);
+        }
+
+        .hold {
+            color: var(--amber);
+            background: rgba(245,158,11,0.12);
+            border: 1px solid rgba(245,158,11,0.5);
+        }
+
+        .metric-card {
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .progress-background {
+            width: 100%;
+            height: 7px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            border-radius: 20px;
+            background: var(--cyan);
+            transition: width 0.6s ease;
+        }
+
+        .reason-box {
+            background: rgba(0,240,255,0.035);
+            border-left: 3px solid var(--cyan);
+            border-radius: 10px;
+            padding: 20px;
+            line-height: 1.7;
+        }
+
+        .agent {
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .activity-item {
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 14px 0;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.45;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .live {
+            animation: pulse 1.8s infinite;
+        }
+
+        @media(max-width:1000px) {
+
+            .sidebar {
+                width: 190px !important;
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr 1fr !important;
+            }
+        }
+
     </style>
+
 </head>
-<body class="flex h-screen">
 
-    <!-- SIDEBAR NAVIGATION (Consistent with design system) -->
-    <aside class="w-64 border-r border-white/5 bg-[#080808] flex flex-col">
-        <div class="p-6">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-cyan-500 rounded flex items-center justify-center shadow-[0_0_15px_rgba(0,240,255,0.3)]">
-                    <i data-lucide="brain-circuit" class="text-black w-5 h-5"></i>
-                </div>
-                <h1 class="text-xl font-bold tracking-tighter text-white">CORTEX</h1>
+
+<body class="flex min-h-screen">
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar w-64 border-r border-white/5 bg-[#080808] flex flex-col">
+
+    <div class="p-6">
+
+        <div class="flex items-center gap-3">
+
+            <div
+                class="w-9 h-9 bg-cyan-500 rounded-lg flex items-center justify-center
+                       shadow-[0_0_18px_rgba(0,240,255,0.3)]">
+
+                <i
+                    data-lucide="brain-circuit"
+                    class="text-black w-5 h-5">
+                </i>
+
             </div>
-        </div>
-        <nav class="flex-1 py-4 text-sm font-medium text-gray-500">
-            <div class="flex items-center gap-3 px-6 py-3 hover:bg-white/5 cursor-pointer"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Command Center</div>
-            <div class="flex items-center gap-3 px-6 py-3 hover:bg-white/5 cursor-pointer"><i data-lucide="activity" class="w-4 h-4"></i> Live Market</div>
-            <div class="sidebar-active flex items-center gap-3 px-6 py-3 cursor-pointer"><i data-lucide="brain" class="w-4 h-4"></i> AI Decisions</div>
-            <div class="flex items-center gap-3 px-6 py-3 hover:bg-white/5 cursor-pointer"><i data-lucide="shield-check" class="w-4 h-4"></i> Risk Center</div>
-            <div class="flex items-center gap-3 px-6 py-3 hover:bg-white/5 cursor-pointer"><i data-lucide="cpu" class="w-4 h-4"></i> AI Agents</div>
-        </nav>
-    </aside>
 
-    <!-- MAIN CONTENT -->
-    <main class="flex-1 flex flex-col overflow-hidden">
+            <div>
+
+                <h1 class="text-xl font-bold tracking-tight text-white">
+                    CORTEX
+                </h1>
+
+                <p class="text-[8px] text-cyan-400 uppercase tracking-widest">
+                    Financial Intelligence
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <nav class="flex-1 py-4 text-sm font-medium text-gray-500">
+
+
+        <!-- COMMAND CENTER -->
+
+        <a
+            href="dashboard.html"
+            class="sidebar-item flex items-center gap-3 px-6 py-3">
+
+            <i
+                data-lucide="layout-dashboard"
+                class="w-4 h-4">
+            </i>
+
+            Dashboard
+
+        </a>
+
+
+        <!-- LIVE MARKET -->
+
+        <a
+            href="live.html"
+            class="sidebar-item flex items-center gap-3 px-6 py-3">
+
+            <i
+                data-lucide="activity"
+                class="w-4 h-4">
+            </i>
+
+            Live Market
+
+        </a>
+
+
+        <!-- AI DECISIONS -->
+
+        <a
+            href="aidec.html"
+            class="sidebar-active flex items-center gap-3 px-6 py-3">
+
+            <i
+                data-lucide="brain"
+                class="w-4 h-4">
+            </i>
+
+            AI Decisions
+
+        </a>
+
+
         
-        <!-- HEADER -->
-        <header class="h-20 border-b border-white/5 flex items-center justify-between px-10 bg-[#080808]/50">
-            <div class="flex items-center gap-10">
-                <div class="font-mono">
-                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Decision ID</p>
-                    <p class="text-sm text-cyan-500 font-bold">DEC-942-X881</p>
-                </div>
-                <div class="font-mono border-l border-white/10 pl-10">
-                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Timestamp</p>
-                    <p class="text-sm text-white">2026-08-28 15:22:04.12</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-6">
-                <div class="flex items-center gap-2 bg-emerald-500/10 px-4 py-2 rounded-full border border-emerald-500/20">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">Engine Status: Optimal</span>
-                </div>
-                <div class="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full">
-                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Market State: Trending</span>
-                </div>
-            </div>
-        </header>
 
-        <div class="flex-1 overflow-y-auto p-10">
-            <div class="grid grid-cols-12 gap-8">
-                
-                <!-- LEFT COLUMN: ANALYSIS -->
-                <div class="col-span-4 space-y-8">
-                    
-                    <!-- ASSET ANALYSIS -->
-                    <div class="glass-panel p-6">
-                        <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Asset Analysis</h3>
-                            <span class="text-white font-bold">BTC/USD</span>
-                        </div>
-                        <div class="space-y-4 font-mono text-sm">
-                            <div class="flex justify-between border-b border-white/5 pb-2">
-                                <span class="text-gray-500">Current Price</span>
-                                <span class="text-white">$64,502.10</span>
-                            </div>
-                            <div class="flex justify-between border-b border-white/5 pb-2">
-                                <span class="text-gray-500">Momentum</span>
-                                <span class="text-emerald-400">+14.2%</span>
-                            </div>
-                            <div class="flex justify-between border-b border-white/5 pb-2">
-                                <span class="text-gray-500">Vol (24h)</span>
-                                <span class="text-white">$4.22B</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-500">Volatility</span>
-                                <span class="text-amber-500">12.4%</span>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- OPPORTUNITY BREAKDOWN -->
-                    <div class="glass-panel p-6">
-                        <div class="flex items-center justify-between mb-2">
-                            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Opportunity Score</h3>
-                            <span class="text-2xl font-black text-cyan-500 font-mono">88<span class="text-xs">/100</span></span>
-                        </div>
-                        <div class="space-y-5 mt-6">
-                            <div>
-                                <div class="flex justify-between text-[10px] uppercase font-bold text-gray-500 mb-1"><span>Expected Return</span><span>+4.8%</span></div>
-                                <div class="score-bar"><div class="h-full score-fill-cyan" style="width: 85%"></div></div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-[10px] uppercase font-bold text-gray-500 mb-1"><span>News Sentiment</span><span>Bullish</span></div>
-                                <div class="score-bar"><div class="h-full score-fill-cyan" style="width: 78%"></div></div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-[10px] uppercase font-bold text-gray-500 mb-1"><span>Liquidity Depth</span><span>High</span></div>
-                                <div class="score-bar"><div class="h-full score-fill-cyan" style="width: 92%"></div></div>
-                            </div>
-                        </div>
-                    </div>
+        <!-- RISK -->
 
-                    <!-- RISK BREAKDOWN -->
-                    <div class="glass-panel p-6">
-                        <div class="flex items-center justify-between mb-2">
-                            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Risk Score</h3>
-                            <span class="text-2xl font-black text-rose-500 font-mono">24<span class="text-xs">/100</span></span>
-                        </div>
-                        <div class="space-y-5 mt-6">
-                            <div>
-                                <div class="flex justify-between text-[10px] uppercase font-bold text-gray-500 mb-1"><span>Volatility Risk</span><span>Low</span></div>
-                                <div class="score-bar"><div class="h-full score-fill-rose" style="width: 15%"></div></div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-[10px] uppercase font-bold text-gray-500 mb-1"><span>Downside Risk</span><span>-1.2%</span></div>
-                                <div class="score-bar"><div class="h-full score-fill-rose" style="width: 22%"></div></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <a
+            href="riskc.html"
+            class="sidebar-item flex items-center gap-3 px-6 py-3">
 
-                <!-- CENTER: THE BIG DECISION -->
-                <div class="col-span-8 flex flex-col gap-8">
-                    
-                    <div class="glass-panel decision-glow flex-1 flex flex-col items-center justify-center p-12 text-center relative overflow-hidden">
-                        <!-- Background Pattern -->
-                        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(var(--cyan) 1px, transparent 0); background-size: 40px 40px;"></div>
-                        
-                        <p class="text-xs font-black uppercase tracking-[0.4em] text-cyan-500 mb-4">Autonomous AI Directive</p>
-                        <h2 class="text-[120px] font-black italic tracking-tighter text-white leading-none mb-6">BUY</h2>
-                        
-                        <div class="grid grid-cols-4 gap-12 mt-8 w-full max-w-2xl font-mono">
-                            <div>
-                                <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Confidence</p>
-                                <p class="text-2xl font-bold text-white">94.2%</p>
-                            </div>
-                            <div>
-                                <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Exp. Return</p>
-                                <p class="text-2xl font-bold text-emerald-400">+4.8%</p>
-                            </div>
-                            <div>
-                                <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Downside</p>
-                                <p class="text-2xl font-bold text-rose-500">-1.4%</p>
-                            </div>
-                            <div>
-                                <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Allocation</p>
-                                <p class="text-2xl font-bold text-cyan-400">25.0%</p>
-                            </div>
-                        </div>
-                    </div>
+            <i
+                data-lucide="shield-check"
+                class="w-4 h-4">
+            </i>
 
-                    <div class="grid grid-cols-2 gap-8">
-                        <!-- AI REASONING -->
-                        <div class="glass-panel p-8">
-                            <h3 class="text-xs font-bold text-white uppercase tracking-widest mb-6">Logical Reasoning</h3>
-                            <div class="space-y-4">
-                                <div class="flex items-start gap-3">
-                                    <span class="text-emerald-500 mt-1">✓</span>
-                                    <p class="text-sm text-gray-300">Bullish news sentiment (82%) detected across institutional feeds.</p>
-                                </div>
-                                <div class="flex items-start gap-3">
-                                    <span class="text-emerald-500 mt-1">✓</span>
-                                    <p class="text-sm text-gray-300">Orderbook depth confirms low slippage for 25% capital entry.</p>
-                                </div>
-                                <div class="flex items-start gap-3">
-                                    <span class="text-rose-500 mt-1">⚠️</span>
-                                    <p class="text-sm text-gray-300">Moderate volatility spike in M1 timeframe; scaling execution speed.</p>
-                                </div>
-                            </div>
-                        </div>
+            Risk Center
 
-                        <!-- DECISION PIPELINE -->
-                        <div class="glass-panel p-8 flex flex-col justify-center">
-                            <h3 class="text-xs font-bold text-white uppercase tracking-widest mb-8">Process Pipeline</h3>
-                            <div class="flex flex-wrap items-center gap-y-4 text-[10px] font-black tracking-widest text-gray-500 uppercase">
-                                <span class="text-cyan-500 border-b border-cyan-500 pb-1">Observe</span>
-                                <span class="pipeline-arrow"></span>
-                                <span class="text-cyan-500 border-b border-cyan-500 pb-1">Interpret</span>
-                                <span class="pipeline-arrow"></span>
-                                <span class="text-cyan-500 border-b border-cyan-500 pb-1">Detect</span>
-                                <span class="pipeline-arrow"></span>
-                                <span class="text-cyan-500 border-b border-cyan-500 pb-1">Assess Risk</span>
-                                <span class="pipeline-arrow"></span>
-                                <span class="text-white border-b-2 border-white pb-1">Allocate</span>
-                                <span class="pipeline-arrow"></span>
-                                <span class="opacity-30">Execute</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        </a>
+
+
+        <!-- AGENTS -->
+
+        <a
+            href="aiagent.html"
+            class="sidebar-item flex items-center gap-3 px-6 py-3">
+
+            <i
+                data-lucide="cpu"
+                class="w-4 h-4">
+            </i>
+
+            AI Agents
+
+        </a>
+
+
+    </nav>
+
+
+    <div class="p-5 border-t border-white/5">
+
+        <div class="flex items-center gap-2">
+
+            <span
+                id="connectionDot"
+                class="status-dot online">
+            </span>
+
+            <span
+                id="connectionText"
+                class="text-[9px] uppercase tracking-widest text-emerald-500 font-bold">
+
+                Backend Connected
+
+            </span>
+
         </div>
 
-        <!-- FOOTER BAR -->
-        <footer class="h-16 border-t border-white/5 bg-black/50 px-10 flex items-center justify-between">
-            <p class="text-xs font-bold text-gray-500 italic">"Why did the AI make this decision? Reasoning is derived from 42 correlated market features and institutional sentiment vectors."</p>
-            <div class="flex gap-4">
-                <button class="px-6 py-2 bg-white/5 hover:bg-white/10 rounded font-bold text-[10px] uppercase tracking-widest transition-all">Download Audit Log</button>
-                <button class="px-6 py-2 bg-cyan-500 text-black rounded font-black text-[10px] uppercase tracking-widest">Execute Directive</button>
-            </div>
-        </footer>
-    </main>
+    </div>
 
-    <script>
-        lucide.createIcons();
-    </script>
+</aside>
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="flex-1 min-w-0">
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header
+    class="h-16 border-b border-white/5 flex items-center justify-between
+           px-8 bg-black/80 backdrop-blur-md sticky top-0 z-40">
+
+
+    <div>
+
+        <h2 class="text-sm font-bold text-white uppercase tracking-widest">
+
+            AI Decision Center
+
+        </h2>
+
+        <p class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">
+
+            Autonomous Decision Intelligence
+
+        </p>
+
+    </div>
+
+
+    <div class="flex items-center gap-6">
+
+
+        <div class="flex items-center gap-2">
+
+            <span
+                id="liveDot"
+                class="status-dot online live">
+            </span>
+
+            <span
+                id="apiStatus"
+                class="text-[10px] font-bold text-emerald-500 uppercase">
+
+                AI ENGINE ONLINE
+
+            </span>
+
+        </div>
+
+
+        <div class="h-6 w-px bg-white/10"></div>
+
+
+        <div class="text-right font-mono">
+
+            <p class="text-[8px] text-gray-500 uppercase">
+                Last Update
+            </p>
+
+            <p
+                id="lastUpdate"
+                class="text-[10px] text-white">
+
+                Waiting...
+
+            </p>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     CONTENT
+===================================================== -->
+
+<div class="p-8 space-y-6">
+
+
+<!-- =====================================================
+     TOP SUMMARY
+===================================================== -->
+
+<section class="grid grid-cols-4 gap-4">
+
+
+    <div class="glass-card p-5">
+
+        <p class="text-[9px] text-gray-500 uppercase tracking-widest">
+            Target Asset
+        </p>
+
+        <h3
+            id="asset"
+            class="text-xl font-bold font-mono text-white mt-2">
+
+            BTC/USD
+
+        </h3>
+
+    </div>
+
+
+    <div class="glass-card p-5">
+
+        <p class="text-[9px] text-gray-500 uppercase tracking-widest">
+            Current Price
+        </p>
+
+        <h3
+            id="price"
+            class="text-xl font-bold font-mono text-white mt-2">
+
+            --
+
+        </h3>
+
+    </div>
+
+
+    <div class="glass-card p-5">
+
+        <p class="text-[9px] text-gray-500 uppercase tracking-widest">
+            Market Trend
+        </p>
+
+        <h3
+            id="trend"
+            class="text-xl font-bold text-emerald-400 mt-2">
+
+            --
+
+        </h3>
+
+    </div>
+
+
+    <div class="glass-card p-5">
+
+        <p class="text-[9px] text-gray-500 uppercase tracking-widest">
+            Decision Cycle
+        </p>
+
+        <h3
+            id="cycle"
+            class="text-xl font-bold font-mono text-cyan-400 mt-2">
+
+            --
+
+        </h3>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     MAIN DECISION GRID
+===================================================== -->
+
+<section class="main-grid grid grid-cols-3 gap-6">
+
+
+<!-- =====================================================
+     DECISION
+===================================================== -->
+
+<div class="col-span-2 decision-card p-7">
+
+
+    <div class="flex justify-between items-start mb-8">
+
+
+        <div>
+
+            <p class="text-[10px] text-cyan-400 uppercase tracking-[0.25em] font-bold">
+                Current AI Decision
+            </p>
+
+            <h2 class="text-2xl font-black text-white mt-2">
+                Autonomous Market Decision
+            </h2>
+
+        </div>
+
+
+        <div class="flex items-center gap-2">
+
+            <span class="status-dot online"></span>
+
+            <span class="text-[9px] text-emerald-400 uppercase font-bold">
+                Decision Engine Active
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="grid grid-cols-2 gap-10">
+
+
+        <!-- LEFT -->
+
+        <div>
+
+
+            <p class="text-[9px] text-gray-500 uppercase tracking-widest mb-3">
+                Recommended Action
+            </p>
+
+
+            <div
+                id="decisionBadge"
+                class="decision-badge buy">
+
+                WAITING
+
+            </div>
+
+
+            <div class="mt-8">
+
+
+                <div class="flex justify-between mb-2">
+
+                    <span class="text-[10px] text-gray-500 uppercase">
+                        Confidence
+                    </span>
+
+                    <span
+                        id="confidenceText"
+                        class="text-sm font-mono font-bold text-emerald-400">
+
+                        0%
+
+                    </span>
+
+                </div>
+
+
+                <div class="progress-background">
+
+                    <div
+                        id="confidenceBar"
+                        class="progress-bar">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="metrics-grid grid grid-cols-2 gap-4 mt-8">
+
+
+                <div class="metric-card">
+
+                    <p class="text-[9px] text-gray-500 uppercase">
+                        Expected Return
+                    </p>
+
+                    <p
+                        id="expectedReturn"
+                        class="text-xl font-bold font-mono text-emerald-400 mt-2">
+
+                        --
+
+                    </p>
+
+                </div>
+
+
+                <div class="metric-card">
+
+                    <p class="text-[9px] text-gray-500 uppercase">
+                        Risk Score
+                    </p>
+
+                    <p
+                        id="riskScore"
+                        class="text-xl font-bold font-mono text-amber-400 mt-2">
+
+                        --
+
+                    </p>
+
+                </div>
+
+
+                <div class="metric-card">
+
+                    <p class="text-[9px] text-gray-500 uppercase">
+                        Allocation
+                    </p>
+
+                    <p
+                        id="allocation"
+                        class="text-xl font-bold font-mono text-cyan-400 mt-2">
+
+                        --
+
+                    </p>
+
+                </div>
+
+
+                <div class="metric-card">
+
+                    <p class="text-[9px] text-gray-500 uppercase">
+                        Time Horizon
+                    </p>
+
+                    <p
+                        id="timeHorizon"
+                        class="text-xl font-bold font-mono text-white mt-2">
+
+                        --
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- RIGHT -->
+
+        <div>
+
+
+            <p class="text-[9px] text-gray-500 uppercase tracking-widest mb-3">
+                AI Reasoning Engine
+            </p>
+
+
+            <div
+                id="reason"
+                class="reason-box text-sm text-gray-300">
+
+                Waiting for AI reasoning from backend...
+
+            </div>
+
+
+            <div class="mt-6 space-y-4">
+
+
+                <div>
+
+                    <div class="flex justify-between mb-2">
+
+                        <span class="text-[9px] text-gray-500 uppercase">
+                            Market Confidence
+                        </span>
+
+                        <span
+                            id="marketConfidence"
+                            class="text-[10px] font-mono text-white">
+
+                            --
+
+                        </span>
+
+                    </div>
+
+                    <div class="progress-background">
+
+                        <div
+                            id="marketConfidenceBar"
+                            class="progress-bar">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <div class="flex justify-between mb-2">
+
+                        <span class="text-[9px] text-gray-500 uppercase">
+                            Risk Confidence
+                        </span>
+
+                        <span
+                            id="riskConfidence"
+                            class="text-[10px] font-mono text-white">
+
+                            --
+
+                        </span>
+
+                    </div>
+
+                    <div class="progress-background">
+
+                        <div
+                            id="riskConfidenceBar"
+                            class="progress-bar">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     DECISION SUMMARY
+===================================================== -->
+
+<div class="glass-card p-6">
+
+
+    <h3 class="text-xs font-bold text-white uppercase tracking-widest mb-6">
+        Decision Summary
+    </h3>
+
+
+    <div class="space-y-5">
+
+
+        <div>
+
+            <p class="text-[9px] text-gray-500 uppercase">
+                Signal Strength
+            </p>
+
+            <p
+                id="signalStrength"
+                class="text-lg font-bold text-cyan-400 mt-1">
+
+                --
+
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <p class="text-[9px] text-gray-500 uppercase">
+                Market Regime
+            </p>
+
+            <p
+                id="marketRegime"
+                class="text-lg font-bold text-white mt-1">
+
+                --
+
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <p class="text-[9px] text-gray-500 uppercase">
+                Position Bias
+            </p>
+
+            <p
+                id="positionBias"
+                class="text-lg font-bold text-emerald-400 mt-1">
+
+                --
+
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <p class="text-[9px] text-gray-500 uppercase">
+                Stop Loss
+            </p>
+
+            <p
+                id="stopLoss"
+                class="text-lg font-bold font-mono text-rose-400 mt-1">
+
+                --
+
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <p class="text-[9px] text-gray-500 uppercase">
+                Take Profit
+            </p>
+
+            <p
+                id="takeProfit"
+                class="text-lg font-bold font-mono text-emerald-400 mt-1">
+
+                --
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     AGENT CONTRIBUTIONS
+===================================================== -->
+
+<section class="glass-card p-6">
+
+
+    <div class="flex justify-between items-center mb-6">
+
+        <div>
+
+            <h3 class="text-xs font-bold text-white uppercase tracking-widest">
+                AI Agent Contributions
+            </h3>
+
+            <p class="text-[9px] text-gray-500 mt-1">
+                Individual agent confidence used in final decision
+            </p>
+
+        </div>
+
+
+        <span class="text-[9px] text-cyan-400 font-mono">
+            MULTI-AGENT FUSION
+        </span>
+
+    </div>
+
+
+    <div class="grid grid-cols-3 gap-4">
+
+
+        <div class="agent">
+
+            <div class="flex justify-between">
+
+                <span class="text-xs text-white font-bold">
+                    Market Perception
+                </span>
+
+                <span
+                    id="perceptionConfidence"
+                    class="text-xs text-cyan-400 font-mono">
+
+                    --
+
+                </span>
+
+            </div>
+
+            <p
+                id="perceptionSignal"
+                class="text-[9px] text-gray-500 mt-2">
+
+                Waiting for data...
+
+            </p>
+
+        </div>
+
+
+        <div class="agent">
+
+            <div class="flex justify-between">
+
+                <span class="text-xs text-white font-bold">
+                    News Intelligence
+                </span>
+
+                <span
+                    id="newsConfidence"
+                    class="text-xs text-violet-400 font-mono">
+
+                    --
+
+                </span>
+
+            </div>
+
+            <p
+                id="newsSignal"
+                class="text-[9px] text-gray-500 mt-2">
+
+                Waiting for data...
+
+            </p>
+
+        </div>
+
+
+        <div class="agent">
+
+            <div class="flex justify-between">
+
+                <span class="text-xs text-white font-bold">
+                    Opportunity
+                </span>
+
+                <span
+                    id="opportunityConfidence"
+                    class="text-xs text-amber-400 font-mono">
+
+                    --
+
+                </span>
+
+            </div>
+
+            <p
+                id="opportunitySignal"
+                class="text-[9px] text-gray-500 mt-2">
+
+                Waiting for data...
+
+            </p>
+
+        </div>
+
+
+        <div class="agent">
+
+            <div class="flex justify-between">
+
+                <span class="text-xs text-white font-bold">
+                    Risk Management
+                </span>
+
+                <span
+                    id="riskAgentConfidence"
+                    class="text-xs text-rose-400 font-mono">
+
+                    --
+
+                </span>
+
+            </div>
+
+            <p
+                id="riskSignal"
+                class="text-[9px] text-gray-500 mt-2">
+
+                Waiting for data...
+
+            </p>
+
+        </div>
+
+
+        <div class="agent">
+
+            <div class="flex justify-between">
+
+                <span class="text-xs text-white font-bold">
+                    Capital Allocation
+                </span>
+
+                <span
+                    id="capitalConfidence"
+                    class="text-xs text-emerald-400 font-mono">
+
+                    --
+
+                </span>
+
+            </div>
+
+            <p
+                id="capitalSignal"
+                class="text-[9px] text-gray-500 mt-2">
+
+                Waiting for data...
+
+            </p>
+
+        </div>
+
+
+        <div class="agent">
+
+            <div class="flex justify-between">
+
+                <span class="text-xs text-white font-bold">
+                    Execution
+                </span>
+
+                <span
+                    id="executionConfidence"
+                    class="text-xs text-blue-400 font-mono">
+
+                    --
+
+                </span>
+
+            </div>
+
+            <p
+                id="executionSignal"
+                class="text-[9px] text-gray-500 mt-2">
+
+                Waiting for data...
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     DECISION HISTORY
+===================================================== -->
+
+<section class="glass-card p-6">
+
+
+    <div class="flex justify-between items-center mb-5">
+
+        <h3 class="text-xs font-bold text-white uppercase tracking-widest">
+            Recent AI Decisions
+        </h3>
+
+        <span
+            id="historyStatus"
+            class="text-[9px] text-gray-500 uppercase">
+
+            Live
+
+        </span>
+
+    </div>
+
+
+    <div
+        id="decisionHistory"
+        class="space-y-1">
+
+        <div class="activity-item">
+
+            <div class="flex justify-between">
+
+                <span class="text-xs text-gray-400">
+                    Waiting for backend decisions...
+                </span>
+
+                <span class="text-[9px] text-gray-600 font-mono">
+                    --
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FOOTER STATUS
+===================================================== -->
+
+<section
+    class="glass-card px-6 py-4 flex justify-between items-center">
+
+
+    <div class="flex items-center gap-3">
+
+        <span
+            id="footerDot"
+            class="status-dot online">
+        </span>
+
+        <span
+            id="footerStatus"
+            class="text-[9px] uppercase tracking-widest text-emerald-400 font-bold">
+
+            Connected to AI Decision Engine
+
+        </span>
+
+    </div>
+
+
+    <div class="font-mono text-[9px] text-gray-500">
+
+        AUTO REFRESH:
+
+        <span class="text-cyan-400">
+            5 SEC
+        </span>
+
+    </div>
+
+</section>
+
+
+</div>
+
+</main>
+
+
+
+<!-- =====================================================
+     DYNAMIC JAVASCRIPT
+===================================================== -->
+
+<script>
+
+    lucide.createIcons();
+
+
+    /*
+    ========================================================
+    IMPORTANT
+    ========================================================
+
+    Replace ONLY the URL below with your EXISTING
+    backend/API endpoint.
+
+    Example:
+
+    const API_URL = "http://localhost:5000/api/ai-decision";
+
+    Do NOT create another backend endpoint.
+
+    Do NOT change cortex.js.
+
+    Do NOT change script.js.
+    ========================================================
+    */
+
+    const API_URL = "YOUR_EXISTING_AI_DECISION_API";
+
+
+    /*
+    ========================================================
+    HELPER
+    ========================================================
+    */
+
+    function getValue(data, names, defaultValue = "--") {
+
+        for (const name of names) {
+
+            if (
+                data[name] !== undefined &&
+                data[name] !== null
+            ) {
+
+                return data[name];
+
+            }
+
+        }
+
+        return defaultValue;
+
+    }
+
+
+    /*
+    ========================================================
+    NUMBER FORMATTER
+    ========================================================
+    */
+
+    function formatNumber(value, decimals = 2) {
+
+        if (
+            value === undefined ||
+            value === null ||
+            value === "--"
+        ) {
+
+            return "--";
+
+        }
+
+        const number = Number(value);
+
+        if (Number.isNaN(number)) {
+
+            return value;
+
+        }
+
+        return number.toFixed(decimals);
+
+    }
+
+
+    /*
+    ========================================================
+    UPDATE ELEMENT
+    ========================================================
+    */
+
+    function setText(id, value) {
+
+        const element = document.getElementById(id);
+
+        if (element) {
+
+            element.textContent = value;
+
+        }
+
+    }
+
+
+    /*
+    ========================================================
+    UPDATE PROGRESS BAR
+    ========================================================
+    */
+
+    function setProgress(id, value) {
+
+        const element = document.getElementById(id);
+
+        if (!element) {
+
+            return;
+
+        }
+
+        let number = Number(value);
+
+        if (Number.isNaN(number)) {
+
+            number = 0;
+
+        }
+
+        number = Math.max(
+            0,
+            Math.min(100, number)
+        );
+
+        element.style.width = number + "%";
+
+    }
+
+
+    /*
+    ========================================================
+    DECISION COLOR
+    ========================================================
+    */
+
+    function updateDecisionStyle(decision) {
+
+        const badge =
+            document.getElementById("decisionBadge");
+
+        if (!badge) {
+
+            return;
+
+        }
+
+        badge.classList.remove(
+            "buy",
+            "sell",
+            "hold"
+        );
+
+
+        const text =
+            String(decision)
+                .toUpperCase();
+
+
+        if (
+            text.includes("BUY") ||
+            text.includes("ACCUMULATE")
+        ) {
+
+            badge.classList.add("buy");
+
+        }
+
+        else if (
+            text.includes("SELL") ||
+            text.includes("REDUCE")
+        ) {
+
+            badge.classList.add("sell");
+
+        }
+
+        else {
+
+            badge.classList.add("hold");
+
+        }
+
+    }
+
+
+    /*
+    ========================================================
+    UPDATE AGENT
+    ========================================================
+    */
+
+    function updateAgent(
+        confidenceId,
+        signalId,
+        confidence,
+        signal
+    ) {
+
+        setText(
+            confidenceId,
+            confidence === "--"
+                ? "--"
+                : formatNumber(confidence, 1) + "%"
+        );
+
+        setText(
+            signalId,
+            signal || "No signal available"
+        );
+
+    }
+
+
+    /*
+    ========================================================
+    MAIN API FUNCTION
+    ========================================================
+    */
+
+    async function loadAIDecision() {
+
+        try {
+
+            const response =
+                await fetch(API_URL, {
+
+                    method: "GET",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+
+                });
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Backend returned HTTP " +
+                    response.status
+                );
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            console.log(
+                "AI Decision Backend Response:",
+                data
+            );
+
+
+            /*
+            ====================================================
+            BASIC DECISION DATA
+            ====================================================
+            */
+
+            const decision =
+                getValue(
+                    data,
+                    [
+                        "decision",
+                        "action",
+                        "recommendation"
+                    ],
+                    "WAITING"
+                );
+
+
+            const confidence =
+                getValue(
+                    data,
+                    [
+                        "confidence",
+                        "confidence_score"
+                    ],
+                    0
+                );
+
+
+            const expectedReturn =
+                getValue(
+                    data,
+                    [
+                        "expected_return",
+                        "expectedReturn",
+                        "exp_return"
+                    ]
+                );
+
+
+            const riskScore =
+                getValue(
+                    data,
+                    [
+                        "risk_score",
+                        "riskScore"
+                    ]
+                );
+
+
+            const allocation =
+                getValue(
+                    data,
+                    [
+                        "allocation",
+                        "allocation_percentage"
+                    ]
+                );
+
+
+            const asset =
+                getValue(
+                    data,
+                    [
+                        "asset",
+                        "symbol",
+                        "trading_pair"
+                    ],
+                    "BTC/USD"
+                );
+
+
+            const price =
+                getValue(
+                    data,
+                    [
+                        "price",
+                        "current_price",
+                        "currentPrice"
+                    ]
+                );
+
+
+            /*
+            ====================================================
+            MARKET DATA
+            ====================================================
+            */
+
+            const trend =
+                getValue(
+                    data,
+                    [
+                        "trend",
+                        "market_trend"
+                    ]
+                );
+
+
+            const cycle =
+                getValue(
+                    data,
+                    [
+                        "cycle",
+                        "decision_cycle"
+                    ]
+                );
+
+
+            const reason =
+                getValue(
+                    data,
+                    [
+                        "reason",
+                        "reasoning",
+                        "ai_reasoning"
+                    ],
+                    "No reasoning available."
+                );
+
+
+            /*
+            ====================================================
+            RISK / TRADE DATA
+            ====================================================
+            */
+
+            const timeHorizon =
+                getValue(
+                    data,
+                    [
+                        "time_horizon",
+                        "timeHorizon",
+                        "horizon"
+                    ]
+                );
+
+
+            const signalStrength =
+                getValue(
+                    data,
+                    [
+                        "signal_strength",
+                        "signalStrength"
+                    ]
+                );
+
+
+            const marketRegime =
+                getValue(
+                    data,
+                    [
+                        "market_regime",
+                        "marketRegime"
+                    ]
+                );
+
+
+            const positionBias =
+                getValue(
+                    data,
+                    [
+                        "position_bias",
+                        "positionBias"
+                    ]
+                );
+
+
+            const stopLoss =
+                getValue(
+                    data,
+                    [
+                        "stop_loss",
+                        "stopLoss"
+                    ]
+                );
+
+
+            const takeProfit =
+                getValue(
+                    data,
+                    [
+                        "take_profit",
+                        "takeProfit"
+                    ]
+                );
+
+
+            /*
+            ====================================================
+            UPDATE MAIN UI
+            ====================================================
+            */
+
+            setText(
+                "asset",
+                asset
+            );
+
+
+            setText(
+                "price",
+                price === "--"
+                    ? "--"
+                    : "$" + formatNumber(price, 2)
+            );
+
+
+            setText(
+                "trend",
+                trend
+            );
+
+
+            setText(
+                "cycle",
+                cycle
+            );
+
+
+            setText(
+                "decisionBadge",
+                String(decision).toUpperCase()
+            );
+
+
+            updateDecisionStyle(
+                decision
+            );
+
+
+            setText(
+                "confidenceText",
+                formatNumber(confidence, 1) + "%"
+            );
+
+
+            setProgress(
+                "confidenceBar",
+                confidence
+            );
+
+
+            setText(
+                "expectedReturn",
+                expectedReturn === "--"
+                    ? "--"
+                    : formatNumber(expectedReturn, 2) + "%"
+            );
+
+
+            setText(
+                "riskScore",
+                riskScore === "--"
+                    ? "--"
+                    : formatNumber(riskScore, 1) + "/10"
+            );
+
+
+            setText(
+                "allocation",
+                allocation === "--"
+                    ? "--"
+                    : formatNumber(allocation, 2) + "%"
+            );
+
+
+            setText(
+                "timeHorizon",
+                timeHorizon
+            );
+
+
+            setText(
+                "reason",
+                reason
+            );
+
+
+            /*
+            ====================================================
+            SECONDARY DATA
+            ====================================================
+            */
+
+            const marketConfidence =
+                getValue(
+                    data,
+                    [
+                        "market_confidence",
+                        "marketConfidence"
+                    ],
+                    confidence
+                );
+
+
+            const riskConfidence =
+                getValue(
+                    data,
+                    [
+                        "risk_confidence",
+                        "riskConfidence"
+                    ],
+                    confidence
+                );
+
+
+            setText(
+                "marketConfidence",
+                formatNumber(
+                    marketConfidence,
+                    1
+                ) + "%"
+            );
+
+
+            setProgress(
+                "marketConfidenceBar",
+                marketConfidence
+            );
+
+
+            setText(
+                "riskConfidence",
+                formatNumber(
+                    riskConfidence,
+                    1
+                ) + "%"
+            );
+
+
+            setProgress(
+                "riskConfidenceBar",
+                riskConfidence
+            );
+
+
+            /*
+            ====================================================
+            DECISION SUMMARY
+            ====================================================
+            */
+
+            setText(
+                "signalStrength",
+                signalStrength
+            );
+
+
+            setText(
+                "marketRegime",
+                marketRegime
+            );
+
+
+            setText(
+                "positionBias",
+                positionBias
+            );
+
+
+            setText(
+                "stopLoss",
+                stopLoss === "--"
+                    ? "--"
+                    : "$" + formatNumber(stopLoss, 2)
+            );
+
+
+            setText(
+                "takeProfit",
+                takeProfit === "--"
+                    ? "--"
+                    : "$" + formatNumber(takeProfit, 2)
+            );
+
+
+            /*
+            ====================================================
+            AGENT DATA
+            ====================================================
+            */
+
+            const agents =
+                data.agents || {};
+
+
+            updateAgent(
+                "perceptionConfidence",
+                "perceptionSignal",
+
+                getValue(
+                    agents.perception || {},
+                    [
+                        "confidence"
+                    ]
+                ),
+
+                getValue(
+                    agents.perception || {},
+                    [
+                        "signal",
+                        "task",
+                        "status"
+                    ]
+                )
+            );
+
+
+            updateAgent(
+                "newsConfidence",
+                "newsSignal",
+
+                getValue(
+                    agents.news || {},
+                    [
+                        "confidence"
+                    ]
+                ),
+
+                getValue(
+                    agents.news || {},
+                    [
+                        "signal",
+                        "task",
+                        "status"
+                    ]
+                )
+            );
+
+
+            updateAgent(
+                "opportunityConfidence",
+                "opportunitySignal",
+
+                getValue(
+                    agents.opportunity || {},
+                    [
+                        "confidence"
+                    ]
+                ),
+
+                getValue(
+                    agents.opportunity || {},
+                    [
+                        "signal",
+                        "task",
+                        "status"
+                    ]
+                )
+            );
+
+
+            updateAgent(
+                "riskAgentConfidence",
+                "riskSignal",
+
+                getValue(
+                    agents.risk || {},
+                    [
+                        "confidence"
+                    ]
+                ),
+
+                getValue(
+                    agents.risk || {},
+                    [
+                        "signal",
+                        "task",
+                        "status"
+                    ]
+                )
+            );
+
+
+            updateAgent(
+                "capitalConfidence",
+                "capitalSignal",
+
+                getValue(
+                    agents.capital || {},
+                    [
+                        "confidence"
+                    ]
+                ),
+
+                getValue(
+                    agents.capital || {},
+                    [
+                        "signal",
+                        "task",
+                        "status"
+                    ]
+                )
+            );
+
+
+            updateAgent(
+                "executionConfidence",
+                "executionSignal",
+
+                getValue(
+                    agents.execution || {},
+                    [
+                        "confidence"
+                    ]
+                ),
+
+                getValue(
+                    agents.execution || {},
+                    [
+                        "signal",
+                        "task",
+                        "status"
+                    ]
+                )
+            );
+
+
+            /*
+            ====================================================
+            CONNECTION STATUS
+            ====================================================
+            */
+
+            setText(
+                "apiStatus",
+                "AI ENGINE ONLINE"
+            );
+
+
+            setText(
+                "connectionText",
+                "Backend Connected"
+            );
+
+
+            setText(
+                "footerStatus",
+                "Connected to AI Decision Engine"
+            );
+
+
+            document
+                .getElementById("connectionDot")
+                .classList.remove("offline");
+
+            document
+                .getElementById("connectionDot")
+                .classList.add("online");
+
+
+            document
+                .getElementById("footerDot")
+                .classList.remove("offline");
+
+            document
+                .getElementById("footerDot")
+                .classList.add("online");
+
+
+            /*
+            ====================================================
+            TIMESTAMP
+            ====================================================
+            */
+
+            const now =
+                new Date();
+
+            setText(
+                "lastUpdate",
+                now.toLocaleTimeString()
+            );
+
+
+            /*
+            ====================================================
+            DECISION HISTORY
+            ====================================================
+            */
+
+            addDecisionToHistory(
+                decision,
+                asset,
+                confidence
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "AI Decision API Error:",
+                error
+            );
+
+
+            /*
+            ====================================================
+            SHOW BACKEND ERROR
+            ====================================================
+            */
+
+            setText(
+                "apiStatus",
+                "API CONNECTION ERROR"
+            );
+
+
+            setText(
+                "connectionText",
+                "Backend Disconnected"
+            );
+
+
+            setText(
+                "footerStatus",
+                "Unable to connect to AI Decision Engine"
+            );
+
+
+            const connectionDot =
+                document.getElementById(
+                    "connectionDot"
+                );
+
+            connectionDot.classList.remove(
+                "online"
+            );
+
+            connectionDot.classList.add(
+                "offline"
+            );
+
+
+            const footerDot =
+                document.getElementById(
+                    "footerDot"
+                );
+
+            footerDot.classList.remove(
+                "online"
+            );
+
+            footerDot.classList.add(
+                "offline"
+            );
+
+        }
+
+    }
+
+
+    /*
+    ========================================================
+    DECISION HISTORY
+    ========================================================
+    */
+
+    const decisionHistory = [];
+
+
+    function addDecisionToHistory(
+        decision,
+        asset,
+        confidence
+    ) {
+
+        const now =
+            new Date()
+                .toLocaleTimeString();
+
+
+        decisionHistory.unshift({
+
+            decision:
+                String(decision)
+                    .toUpperCase(),
+
+            asset:
+                asset,
+
+            confidence:
+                formatNumber(
+                    confidence,
+                    1
+                ) + "%",
+
+            time:
+                now
+
+        });
+
+
+        /*
+        Keep only last 5 decisions
+        */
+
+        if (
+            decisionHistory.length > 5
+        ) {
+
+            decisionHistory.pop();
+
+        }
+
+
+        renderDecisionHistory();
+
+    }
+
+
+    function renderDecisionHistory() {
+
+        const container =
+            document.getElementById(
+                "decisionHistory"
+            );
+
+
+        if (!container) {
+
+            return;
+
+        }
+
+
+        container.innerHTML = "";
+
+
+        decisionHistory.forEach(
+            item => {
+
+                const row =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                row.className =
+                    "activity-item flex justify-between items-center";
+
+
+                row.innerHTML = `
+
+                    <div>
+
+                        <p class="text-xs text-white font-bold">
+                            ${item.decision}
+                            <span class="text-gray-500">
+                                — ${item.asset}
+                            </span>
+                        </p>
+
+                        <p class="text-[9px] text-gray-500 mt-1">
+                            Confidence: ${item.confidence}
+                        </p>
+
+                    </div>
+
+                    <span class="text-[9px] text-gray-600 font-mono">
+                        ${item.time}
+                    </span>
+
+                `;
+
+
+                container.appendChild(
+                    row
+                );
+
+            }
+        );
+
+    }
+
+
+    /*
+    ========================================================
+    INITIAL LOAD
+    ========================================================
+    */
+
+    loadAIDecision();
+
+
+    /*
+    ========================================================
+    AUTO REFRESH
+    ========================================================
+
+    Backend is queried every 5 seconds.
+
+    Change this number only if required.
+    ========================================================
+    */
+
+    setInterval(
+        loadAIDecision,
+        5000
+    );
+
+</script>
+
 </body>
 </html>

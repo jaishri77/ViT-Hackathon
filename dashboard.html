@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
 <title>CORTEX | Command Center</title>
 
@@ -124,19 +128,357 @@ header {
 
     background: var(--green);
 
-    box-shadow:
-        0 0 10px var(--green);
+    box-shadow: 0 0 10px var(--green);
 }
 
 .dot.red {
     background: var(--red);
 
-    box-shadow:
-        0 0 10px var(--red);
+    box-shadow: 0 0 10px var(--red);
 }
 
 .datetime {
     font-weight: 600;
+}
+
+
+/* =========================
+   ADMIN CONTAINER
+========================= */
+
+.admin-container {
+    position: relative;
+    display: inline-block;
+}
+
+
+/* =========================
+   ADMIN PROFILE
+========================= */
+
+.admin-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 7px 11px;
+
+    min-width: 165px;
+
+    background: #111720;
+
+    border: 1px solid #29313b;
+
+    border-radius: 9px;
+
+    cursor: pointer;
+
+    transition: 0.25s;
+
+    user-select: none;
+}
+
+.admin-profile:hover {
+    border-color: var(--cyan);
+
+    background: rgba(0,217,255,0.07);
+
+    box-shadow:
+        0 0 12px
+        rgba(0,217,255,0.12);
+}
+
+
+/* =========================
+   ADMIN ICON
+========================= */
+
+.admin-icon {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: linear-gradient(
+        135deg,
+        #00d9ff,
+        #662cff
+    );
+
+    color: white;
+
+    font-size: 16px;
+
+    box-shadow:
+        0 0 10px
+        rgba(0,217,255,0.3);
+}
+
+
+/* =========================
+   ADMIN DETAILS
+========================= */
+
+.admin-info {
+    display: flex;
+
+    flex-direction: column;
+
+    flex: 1;
+
+    line-height: 1.2;
+}
+
+.admin-name {
+    color: white;
+
+    font-size: 13px;
+
+    font-weight: bold;
+}
+
+.admin-role {
+    color: #8493a5;
+
+    font-size: 10px;
+
+    margin-top: 3px;
+}
+
+
+/* =========================
+   ADMIN ARROW
+========================= */
+
+.admin-arrow {
+    color: #8190a2;
+
+    font-size: 10px;
+
+    transition: 0.25s;
+}
+
+.admin-profile.active .admin-arrow {
+    transform: rotate(180deg);
+
+    color: var(--cyan);
+}
+
+
+/* =========================
+   ADMIN DROPDOWN
+========================= */
+
+.admin-menu {
+    position: absolute;
+
+    top: calc(100% + 10px);
+
+    right: 0;
+
+    width: 245px;
+
+    background: #0d1219;
+
+    border: 1px solid #29313b;
+
+    border-radius: 10px;
+
+    padding: 10px;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,0.55),
+        0 0 20px rgba(0,217,255,0.08);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform: translateY(-10px);
+
+    transition: 0.25s ease;
+
+    z-index: 1000;
+}
+
+
+/* =========================
+   SHOW MENU
+========================= */
+
+.admin-menu.show {
+    opacity: 1;
+
+    visibility: visible;
+
+    transform: translateY(0);
+}
+
+
+/* =========================
+   ADMIN MENU HEADER
+========================= */
+
+.admin-menu-header {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 12px;
+
+    margin-bottom: 6px;
+
+    border-bottom: 1px solid #252c35;
+}
+
+.admin-menu-icon {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: linear-gradient(
+        135deg,
+        #00d9ff,
+        #662cff
+    );
+
+    color: white;
+
+    font-size: 16px;
+}
+
+.admin-menu-header strong {
+    display: block;
+
+    color: white;
+
+    font-size: 14px;
+}
+
+.admin-menu-header span {
+    display: block;
+
+    color: #8190a2;
+
+    font-size: 11px;
+
+    margin-top: 3px;
+}
+
+
+/* =========================
+   MENU ITEMS
+========================= */
+
+.admin-menu-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 11px 12px;
+
+    border-radius: 6px;
+
+    color: #aeb9c7;
+
+    font-size: 13px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.admin-menu-item i {
+    width: 17px;
+
+    color: #8493a5;
+}
+
+.admin-menu-item:hover {
+    background:
+        rgba(0,217,255,0.08);
+
+    color: var(--cyan);
+}
+
+.admin-menu-item:hover i {
+    color: var(--cyan);
+}
+
+
+/* =========================
+   DIVIDER
+========================= */
+
+.admin-menu-divider {
+    height: 1px;
+
+    background: #252c35;
+
+    margin: 6px 0;
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+.admin-menu-item.logout {
+    color: var(--red);
+}
+
+.admin-menu-item.logout i {
+    color: var(--red);
+}
+
+.admin-menu-item.logout:hover {
+    background:
+        rgba(255,69,69,0.08);
+}
+
+
+/* =========================
+   RESPONSIVE ADMIN
+========================= */
+
+@media(max-width:900px) {
+
+    .admin-info {
+        display: none;
+    }
+
+    .admin-arrow {
+        display: none;
+    }
+
+    .admin-profile {
+        min-width: auto;
+
+        padding: 5px;
+
+        border: none;
+
+        background: transparent;
+    }
+
+    .admin-profile:hover {
+        background:
+            rgba(0,217,255,0.08);
+    }
+
 }
 
 
@@ -149,7 +491,8 @@ header {
 
     grid-template-columns: 270px 1fr;
 
-    min-height: calc(100vh - 76px);
+    min-height:
+        calc(100vh - 76px);
 }
 
 
@@ -169,6 +512,7 @@ header {
     height: 52px;
 
     display: flex;
+
     align-items: center;
 
     gap: 15px;
@@ -181,7 +525,12 @@ header {
 
     cursor: pointer;
 
-    border-left: 3px solid transparent;
+    border-left:
+        3px solid transparent;
+
+    text-decoration: none;
+
+    transition: 0.2s;
 }
 
 .nav i {
@@ -191,15 +540,18 @@ header {
 .nav:hover {
     color: var(--cyan);
 
-    background: rgba(0,217,255,0.05);
+    background:
+        rgba(0,217,255,0.05);
 }
 
 .nav.active {
     color: var(--cyan);
 
-    background: rgba(0,217,255,0.08);
+    background:
+        rgba(0,217,255,0.08);
 
-    border-left-color: var(--cyan);
+    border-left-color:
+        var(--cyan);
 }
 
 
@@ -236,7 +588,8 @@ main {
 
     background: var(--card);
 
-    border: 1px solid var(--border);
+    border:
+        1px solid var(--border);
 
     border-radius: 12px;
 }
@@ -308,7 +661,8 @@ main {
 .panel {
     background: var(--card);
 
-    border: 1px solid var(--border);
+    border:
+        1px solid var(--border);
 
     border-radius: 15px;
 
@@ -349,8 +703,6 @@ main {
 }
 
 .change {
-    color: var(--green);
-
     font-size: 18px;
 
     margin-left: 7px;
@@ -392,9 +744,6 @@ main {
         );
 }
 
-
-/* GRID */
-
 .chart::before {
     content: "";
 
@@ -419,9 +768,6 @@ main {
         66px 54px;
 }
 
-
-/* SVG */
-
 svg {
     position: absolute;
 
@@ -433,9 +779,6 @@ svg {
 
     z-index: 2;
 }
-
-
-/* GRAPH */
 
 .graph-area {
     fill: url(#areaGradient);
@@ -509,7 +852,7 @@ svg {
 
 
 /* =========================
-   WHITE PRICE BOX
+   CURRENT PRICE
 ========================= */
 
 .current-price {
@@ -534,13 +877,9 @@ svg {
     z-index: 10;
 
     box-shadow:
-        0 2px 8px rgba(0,0,0,0.4);
+        0 2px 8px
+        rgba(0,0,0,0.4);
 }
-
-
-/*
-   Small pointer underneath
-*/
 
 .current-price::after {
     content: "";
@@ -551,11 +890,14 @@ svg {
 
     right: 14px;
 
-    border-left: 6px solid transparent;
+    border-left:
+        6px solid transparent;
 
-    border-right: 6px solid transparent;
+    border-right:
+        6px solid transparent;
 
-    border-top: 6px solid white;
+    border-top:
+        6px solid white;
 }
 
 
@@ -585,7 +927,7 @@ svg {
 
 
 /* =========================
-   SCANNING ANIMATION
+   SCANNING
 ========================= */
 
 .scan-line {
@@ -602,7 +944,8 @@ svg {
     background: var(--cyan);
 
     box-shadow:
-        0 0 10px var(--cyan);
+        0 0 10px
+        var(--cyan);
 
     z-index: 8;
 
@@ -629,6 +972,7 @@ svg {
         top: 100%;
         opacity: 0;
     }
+
 }
 
 
@@ -704,7 +1048,8 @@ svg {
     color: var(--green);
 
     text-shadow:
-        0 0 8px var(--green);
+        0 0 8px
+        var(--green);
 }
 
 
@@ -749,7 +1094,8 @@ svg {
     background:
         rgba(0,245,160,0.12);
 
-    border: 1px solid var(--green);
+    border:
+        1px solid var(--green);
 
     border-radius: 4px;
 
@@ -796,7 +1142,8 @@ svg {
 
     padding: 16px;
 
-    border-left: 3px solid var(--cyan);
+    border-left:
+        3px solid var(--cyan);
 
     border-radius: 6px;
 
@@ -819,7 +1166,8 @@ svg {
 .activity-item {
     padding: 12px 0;
 
-    border-bottom: 1px solid #252c35;
+    border-bottom:
+        1px solid #252c35;
 
     font-size: 14px;
 }
@@ -838,13 +1186,35 @@ svg {
 
 
 /* =========================
+   BACKEND STATUS
+========================= */
+
+.backend-status {
+    font-size: 11px;
+
+    margin-top: 4px;
+
+    color: var(--muted);
+}
+
+.backend-online {
+    color: var(--green);
+}
+
+.backend-offline {
+    color: var(--red);
+}
+
+
+/* =========================
    RESPONSIVE
 ========================= */
 
 @media(max-width:1100px) {
 
     .container {
-        grid-template-columns: 210px 1fr;
+        grid-template-columns:
+            210px 1fr;
     }
 
     .stats {
@@ -856,9 +1226,14 @@ svg {
         grid-template-columns: 1fr;
     }
 
+    .admin-info {
+        display: none;
+    }
+
 }
 
 </style>
+
 </head>
 
 
@@ -871,11 +1246,14 @@ svg {
 
 <header>
 
+
     <div class="logo-area">
+
 
         <div class="logo">
             C
         </div>
+
 
         <div class="logo-text">
 
@@ -885,38 +1263,233 @@ svg {
                 Autonomous Financial Intelligence
             </p>
 
+            <div
+                id="backendStatus"
+                class="backend-status">
+
+                Connecting to backend...
+
+            </div>
+
         </div>
+
 
     </div>
 
 
+
     <div class="header-right">
 
+
         <div class="status">
 
-            <span class="dot"></span>
+            <span
+                id="marketDot"
+                class="dot">
+            </span>
 
-            Market: OPEN
+            Market:
+
+            <span id="marketStatus">
+                CONNECTING
+            </span>
 
         </div>
 
 
+
         <div class="status">
 
-            <span class="dot red"></span>
+            <span
+                id="aiDot"
+                class="dot red">
+            </span>
 
-            AI Core: ACTIVE
+            AI Core:
+
+            <span id="aiStatus">
+                CONNECTING
+            </span>
 
         </div>
+
 
 
         <div
             class="datetime"
             id="datetime">
+        </div>
+
+
+
+        <!-- =========================
+             ADMIN CONTAINER
+        ========================= -->
+
+        <div class="admin-container">
+
+
+            <!-- ADMIN PROFILE -->
+
+            <div
+                class="admin-profile"
+                id="adminProfile">
+
+
+                <div class="admin-icon">
+
+                    <i class="fa-solid fa-user-shield"></i>
+
+                </div>
+
+
+                <div class="admin-info">
+
+
+                    <div class="admin-name">
+                        Admin
+                    </div>
+
+
+                    <div class="admin-role">
+                        Administrator
+                    </div>
+
+
+                </div>
+
+
+                <i
+                    class="fa-solid fa-chevron-down
+                    admin-arrow">
+                </i>
+
+
+            </div>
+
+
+
+            <!-- =========================
+                 ADMIN DROPDOWN
+            ========================= -->
+
+            <div
+                class="admin-menu"
+                id="adminMenu">
+
+
+                <!-- MENU HEADER -->
+
+                <div class="admin-menu-header">
+
+
+                    <div class="admin-menu-icon">
+
+                        <i
+                            class="fa-solid
+                            fa-user-shield">
+                        </i>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            Admin
+                        </strong>
+
+                        <span>
+                            System Administrator
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- PROFILE -->
+
+                <div
+                    class="admin-menu-item"
+                    id="profileBtn">
+
+                    <i
+                        class="fa-solid fa-user">
+                    </i>
+
+                    Profile
+
+                </div>
+
+
+
+                <!-- SETTINGS -->
+
+                <div
+                    class="admin-menu-item"
+                    id="settingsBtn">
+
+                    <i
+                        class="fa-solid fa-gear">
+                    </i>
+
+                    Settings
+
+                </div>
+
+
+
+                <!-- SYSTEM LOGS -->
+
+                <div
+                    class="admin-menu-item"
+                    id="logsBtn">
+
+                    <i
+                        class="fa-solid fa-chart-line">
+                    </i>
+
+                    System Logs
+
+                </div>
+
+
+
+                <!-- DIVIDER -->
+
+                <div
+                    class="admin-menu-divider">
+                </div>
+
+
+
+                <!-- LOGOUT -->
+
+                <div
+                    class="admin-menu-item logout"
+                    id="logoutBtn">
+
+                    <i
+                        class="fa-solid
+                        fa-right-from-bracket">
+                    </i>
+
+                    Logout
+
+                </div>
+
+
+            </div>
+
 
         </div>
 
+
     </div>
+
 
 </header>
 
@@ -931,76 +1504,80 @@ svg {
 
 <aside class="sidebar">
 
-    <div class="nav active">
 
-        <i class="fa-solid fa-table-cells-large"></i>
+    <a
+        href="dashboard.html"
+        class="nav active">
 
-        Command Center
+        <i
+            class="fa-solid
+            fa-table-cells-large">
+        </i>
 
-    </div>
+        Dashboard
+
+    </a>
 
 
-    <div class="nav">
 
-        <i class="fa-solid fa-chart-line"></i>
+    <a
+        href="live.html"
+        class="nav">
+
+        <i
+            class="fa-solid
+            fa-chart-line">
+        </i>
 
         Live Market
 
-    </div>
+    </a>
 
 
-    <div class="nav">
 
-        <i class="fa-solid fa-brain"></i>
+    <a
+        href="aidec.html"
+        class="nav">
+
+        <i
+            class="fa-solid
+            fa-brain">
+        </i>
 
         AI Decisions
 
-    </div>
+    </a>
 
 
-    <div class="nav">
 
-        <i class="fa-solid fa-wallet"></i>
+    <a
+        href="riskc.html"
+        class="nav">
 
-        Portfolio
-
-    </div>
-
-
-    <div class="nav">
-
-        <i class="fa-solid fa-shield-halved"></i>
+        <i
+            class="fa-solid
+            fa-shield-halved">
+        </i>
 
         Risk Center
 
-    </div>
+    </a>
 
 
-    <div class="nav">
 
-        <i class="fa-solid fa-robot"></i>
+    <a
+        href="aiagent.html"
+        class="nav">
+
+        <i
+            class="fa-solid
+            fa-robot">
+        </i>
 
         AI Agents
 
-    </div>
+    </a>
 
-
-    <div class="nav">
-
-        <i class="fa-solid fa-memory"></i>
-
-        Decision Memory
-
-    </div>
-
-
-    <div class="nav">
-
-        <i class="fa-solid fa-vial"></i>
-
-        Simulation
-
-    </div>
 
 </aside>
 
@@ -1022,73 +1599,118 @@ svg {
 
     <div class="stat-card">
 
+
         <div class="stat-title">
             Total Portfolio Value
         </div>
 
-        <div class="stat-number">
-            $1,284,902.45
+
+        <div
+            class="stat-number"
+            id="portfolioValue">
+
+            --
+
         </div>
 
-        <div class="stat-small">
-            +2.4% ▲
+
+        <div
+            class="stat-small"
+            id="portfolioChange">
+
+            --
+
         </div>
+
 
     </div>
 
 
+
     <div class="stat-card">
+
 
         <div class="stat-title">
             Available Capital
         </div>
 
-        <div class="stat-number">
-            $412,055.10
+
+        <div
+            class="stat-number"
+            id="availableCapital">
+
+            --
+
         </div>
+
 
     </div>
 
 
+
     <div class="stat-card">
+
 
         <div class="stat-title">
             Today's P&L
         </div>
 
-        <div class="stat-number green">
-            +$14,202.12
+
+        <div
+            class="stat-number"
+            id="todayPnl">
+
+            --
+
         </div>
+
 
     </div>
 
 
+
     <div class="stat-card">
+
 
         <div class="stat-title">
             Portfolio Exposure
         </div>
 
-        <div class="stat-number">
-            68.2%
+
+        <div
+            class="stat-number"
+            id="exposure">
+
+            --
+
         </div>
 
+
     </div>
+
 
 
     <div
         class="stat-card"
         style="border-right:3px solid var(--green);">
 
+
         <div class="stat-title">
             Overall Risk Score
         </div>
 
-        <div class="stat-number green">
-            2.4 / 10
+
+        <div
+            class="stat-number"
+            id="overallRisk">
+
+            --
+
         </div>
 
+
     </div>
+
 
 </section>
 
@@ -1116,27 +1738,50 @@ svg {
 
         <div>
 
-            <div class="symbol">
+
+            <div
+                class="symbol"
+                id="symbol">
+
                 BTC / USDT
+
             </div>
 
-            <span class="price">
-                $64,281.90
+
+            <span
+                class="price"
+                id="marketPrice">
+
+                --
+
             </span>
 
-            <span class="change">
-                (+1.82%)
+
+            <span
+                class="change"
+                id="marketChange">
+
+                --
+
             </span>
+
 
         </div>
 
 
-        <button class="chart-button">
+
+        <button
+            class="chart-button">
 
             1H Chart
-            <i class="fa-solid fa-chevron-down"></i>
+
+            <i
+                class="fa-solid
+                fa-chevron-down">
+            </i>
 
         </button>
+
 
     </div>
 
@@ -1145,41 +1790,44 @@ svg {
     <div class="chart">
 
 
-        <!-- SCANNING ANIMATION -->
-
-        <div class="scan-line"></div>
-
-
-        <!-- PRICE LINE -->
-
-        <div class="price-line"></div>
-
-
-        <!-- WHITE PRICE BOX -->
-
-        <div class="current-price">
-            $64,281
+        <div class="scan-line">
         </div>
 
 
-        <!-- PRICE AXIS -->
+        <div
+            class="price-line"
+            id="priceLine">
+        </div>
 
-        <div class="price-axis">
 
-            <span>$66K</span>
+        <div
+            class="current-price"
+            id="currentPrice">
 
-            <span>$65K</span>
-
-            <span>$64K</span>
-
-            <span>$63K</span>
-
-            <span>$62K</span>
+            --
 
         </div>
 
 
-        <!-- GRAPH -->
+        <div
+            class="price-axis"
+            id="priceAxis">
+
+
+            <span>--</span>
+
+            <span>--</span>
+
+            <span>--</span>
+
+            <span>--</span>
+
+            <span>--</span>
+
+
+        </div>
+
+
 
         <svg
             viewBox="0 0 1000 330"
@@ -1188,6 +1836,7 @@ svg {
 
             <defs>
 
+
                 <linearGradient
                     id="areaGradient"
                     x1="0"
@@ -1195,170 +1844,47 @@ svg {
                     x2="0"
                     y2="1">
 
+
                     <stop
                         offset="0%"
                         stop-color="#00d9ff"
                         stop-opacity="0.25"/>
+
 
                     <stop
                         offset="100%"
                         stop-color="#00d9ff"
                         stop-opacity="0"/>
 
+
                 </linearGradient>
+
 
             </defs>
 
 
-            <!-- AREA -->
 
             <path
-                class="graph-area"
+                id="graphArea"
+                class="graph-area">
+            </path>
 
-                d="
-                M0 230
-
-                L28 210
-                L55 240
-                L82 215
-                L110 225
-
-                L140 155
-                L165 205
-
-                L190 120
-                L215 195
-
-                L245 225
-                L270 165
-
-                L295 190
-
-                L325 75
-                L350 145
-
-                L380 195
-                L405 130
-
-                L435 170
-
-                L465 55
-                L490 145
-
-                L520 205
-                L550 120
-
-                L580 165
-                L615 95
-
-                L645 140
-                L675 115
-
-                L705 225
-                L735 145
-
-                L765 190
-                L795 105
-
-                L825 170
-                L855 140
-
-                L885 230
-                L915 115
-
-                L945 165
-                L970 80
-                L1000 130
-
-                L1000 330
-                L0 330
-                Z
-                "
-            />
-
-
-            <!-- LINE -->
 
             <path
-                class="graph-line"
+                id="graphLine"
+                class="graph-line">
+            </path>
 
-                d="
-                M0 230
-
-                L28 210
-                L55 240
-                L82 215
-                L110 225
-
-                L140 155
-                L165 205
-
-                L190 120
-                L215 195
-
-                L245 225
-                L270 165
-                L295 190
-
-                L325 75
-                L350 145
-
-                L380 195
-                L405 130
-                L435 170
-
-                L465 55
-                L490 145
-
-                L520 205
-                L550 120
-                L580 165
-
-                L615 95
-                L645 140
-
-                L675 115
-                L705 225
-
-                L735 145
-                L765 190
-
-                L795 105
-                L825 170
-
-                L855 140
-                L885 230
-
-                L915 115
-                L945 165
-
-                L970 80
-                L1000 130
-                "
-            />
 
         </svg>
 
 
-        <!-- TIME -->
 
-        <div class="time-axis">
-
-            <span>09:00 AM</span>
-
-            <span>10:00 AM</span>
-
-            <span>11:00 AM</span>
-
-            <span>12:00 PM</span>
-
-            <span>01:00 PM</span>
-
-            <span>02:00 PM</span>
-
-            <span>03:00 PM</span>
-
+        <div
+            class="time-axis"
+            id="timeAxis">
         </div>
+
 
     </div>
 
@@ -1366,23 +1892,29 @@ svg {
 
     <div class="market-info">
 
-        <span>
-            VOL: 24.1B
+
+        <span id="volume">
+            VOL: --
         </span>
 
-        <span>
-            VOLATILITY: 1.2%
+
+        <span id="volatility">
+            VOLATILITY: --
         </span>
 
-        <span>
-            LIQUIDITY: HIGH
+
+        <span id="liquidity">
+            LIQUIDITY: --
         </span>
 
-        <span>
-            TREND: BULLISH ↗
+
+        <span id="trend">
+            TREND: --
         </span>
+
 
     </div>
+
 
 </div>
 
@@ -1396,8 +1928,11 @@ svg {
 
 
     <div class="decision-title">
+
         Current AI Decision
+
     </div>
+
 
 
     <div class="decision-content">
@@ -1405,9 +1940,15 @@ svg {
 
         <div>
 
-            <div class="buy">
-                STRONG BUY
+
+            <div
+                class="buy"
+                id="decisionAction">
+
+                WAITING
+
             </div>
+
 
 
             <div class="metrics">
@@ -1415,66 +1956,96 @@ svg {
 
                 <div>
 
+
                     <div class="metric-title">
                         Confidence Score
                     </div>
 
-                    <div class="metric-value green">
-                        94.8%
+
+                    <div
+                        class="metric-value"
+                        id="confidence">
+
+                        --
+
                     </div>
+
 
                 </div>
 
 
+
                 <div>
+
 
                     <div class="metric-title">
                         Exp. Return
                     </div>
 
-                    <div class="metric-value">
-                        +4.2%
+
+                    <div
+                        class="metric-value"
+                        id="expectedReturn">
+
+                        --
+
                     </div>
+
 
                 </div>
 
 
+
                 <div>
+
 
                     <div class="metric-title">
                         Risk Score
                     </div>
 
+
                     <div
                         class="metric-value"
-                        style="color:#ffaa00;">
+                        id="decisionRisk">
 
-                        3.1/10
+                        --
 
                     </div>
+
 
                 </div>
 
 
+
                 <div>
+
 
                     <div class="metric-title">
                         Allocation
                     </div>
 
-                    <div class="metric-value">
-                        12.5% Cap
+
+                    <div
+                        class="metric-value"
+                        id="allocation">
+
+                        --
+
                     </div>
+
 
                 </div>
 
 
             </div>
 
+
         </div>
 
 
+
         <div>
+
 
             <div class="reason-title">
 
@@ -1483,24 +2054,20 @@ svg {
             </div>
 
 
-            <div class="reason">
+            <div
+                class="reason"
+                id="reason">
 
-                "Detected high-volume consolidation
-                breakout on the 4H timeframe.
-                News Intelligence Agent confirms
-                positive sentiment from SEC regulatory
-                updates. Liquidity remains sufficient
-                for proposed allocation. Risk-to-reward
-                ratio 1:3.4. Recommending immediate
-                entry at current price levels with
-                trailing stop-loss at $62,100."
+                Waiting for AI reasoning from backend...
 
             </div>
+
 
         </div>
 
 
     </div>
+
 
 </div>
 
@@ -1524,140 +2091,18 @@ svg {
 
 
     <div class="panel-title">
+
         AI Agent Status
-    </div>
-
-
-    <div class="agents">
-
-
-        <div class="agent">
-
-            <div class="agent-top">
-
-                <span>Perception</span>
-
-                <span class="agent-dot">●</span>
-
-            </div>
-
-            <div class="agent-description">
-                Scanning Orderbooks
-            </div>
-
-            <div class="agent-confidence">
-                99.2% Conf
-            </div>
-
-        </div>
-
-
-        <div class="agent">
-
-            <div class="agent-top">
-
-                <span>Intelligence</span>
-
-                <span class="agent-dot">●</span>
-
-            </div>
-
-            <div class="agent-description">
-                Parsing News Feed
-            </div>
-
-            <div class="agent-confidence">
-                88.5% Conf
-            </div>
-
-        </div>
-
-
-        <div class="agent">
-
-            <div class="agent-top">
-
-                <span>Opportunity</span>
-
-                <span class="agent-dot">●</span>
-
-            </div>
-
-            <div class="agent-description">
-                Trend Correlation
-            </div>
-
-            <div class="agent-confidence">
-                92.1% Conf
-            </div>
-
-        </div>
-
-
-        <div class="agent">
-
-            <div class="agent-top">
-
-                <span>Risk</span>
-
-                <span class="agent-dot">●</span>
-
-            </div>
-
-            <div class="agent-description">
-                Volatility Check
-            </div>
-
-            <div class="agent-confidence">
-                99.9% Conf
-            </div>
-
-        </div>
-
-
-        <div class="agent">
-
-            <div class="agent-top">
-
-                <span>Capital</span>
-
-                <span class="agent-dot">●</span>
-
-            </div>
-
-            <div class="agent-description">
-                Optimizing Sizing
-            </div>
-
-            <div class="agent-confidence">
-                95.0% Conf
-            </div>
-
-        </div>
-
-
-        <div class="agent">
-
-            <div class="agent-top">
-
-                <span>Execution</span>
-
-                <span class="agent-dot">●</span>
-
-            </div>
-
-            <div class="agent-description">
-                Monitoring TWAP
-            </div>
-
-            <div class="agent-confidence">
-                99.9% Conf
-            </div>
-
-        </div>
-
 
     </div>
+
+
+    <div
+        class="agents"
+        id="agentsContainer">
+
+    </div>
+
 
 </div>
 
@@ -1671,66 +2116,18 @@ svg {
 
 
     <div class="panel-title">
+
         System Activity
-    </div>
-
-
-    <div class="activity">
-
-
-        <div class="activity-item">
-
-            <div class="activity-time">
-                10:41:22
-            </div>
-
-            Risk Agent flagged spike
-            in ETH gas fees.
-
-        </div>
-
-
-        <div class="activity-item">
-
-            <div class="activity-time">
-                10:40:05
-            </div>
-
-            <span class="activity-highlight">
-
-                Execution Agent completed
-                BTC buy order.
-
-            </span>
-
-        </div>
-
-
-        <div class="activity-item">
-
-            <div class="activity-time">
-                10:38:12
-            </div>
-
-            Capital Agent rebalanced
-            portfolio (1.2%).
-
-        </div>
-
-
-        <div class="activity-item">
-
-            <div class="activity-time">
-                10:35:45
-            </div>
-
-            News Agent parsed
-            144 new articles.
-
-        </div>
-
 
     </div>
+
+
+    <div
+        class="activity"
+        id="activityContainer">
+
+    </div>
+
 
 </div>
 
@@ -1748,25 +2145,107 @@ svg {
 
 <script>
 
-/* =========================
-   LIVE DATE & TIME
-========================= */
+/* =====================================================
+   CORTEX DYNAMIC DASHBOARD
+   Backend -> JavaScript -> HTML
+===================================================== */
+
+
+/* =====================================================
+   1. BACKEND API URL
+===================================================== */
+
+const API_URL = "/api/dashboard";
+
+
+/* =====================================================
+   2. REFRESH INTERVAL
+===================================================== */
+
+const REFRESH_INTERVAL = 5000;
+
+
+/* =====================================================
+   3. ELEMENT HELPER
+===================================================== */
+
+function element(id) {
+
+    return document.getElementById(id);
+
+}
+
+
+/* =====================================================
+   4. NUMBER FORMATTING
+===================================================== */
+
+function money(value) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        isNaN(value)
+    ) {
+
+        return "--";
+
+    }
+
+    return "$" +
+        Number(value).toLocaleString(
+            "en-US",
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
+        );
+
+}
+
+
+function percentage(value) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        isNaN(value)
+    ) {
+
+        return "--";
+
+    }
+
+    return Number(value).toFixed(1) + "%";
+
+}
+
+
+/* =====================================================
+   5. UPDATE DATE AND TIME
+===================================================== */
 
 function updateDateTime() {
 
     const now = new Date();
 
     const options = {
+
         month: "short",
+
         day: "2-digit",
+
         year: "numeric",
+
         hour: "2-digit",
+
         minute: "2-digit",
+
         second: "2-digit"
+
     };
 
-    document.getElementById("datetime")
-        .textContent =
+    element("datetime").textContent =
         now.toLocaleString(
             "en-US",
             options
@@ -1781,8 +2260,1253 @@ setInterval(
     1000
 );
 
+
+/* =====================================================
+   6. BACKEND STATUS
+===================================================== */
+
+function setBackendStatus(online) {
+
+    const status =
+        element("backendStatus");
+
+
+    if (online) {
+
+        status.textContent =
+            "● Backend Connected";
+
+        status.className =
+            "backend-status backend-online";
+
+    }
+
+    else {
+
+        status.textContent =
+            "● Backend Offline";
+
+        status.className =
+            "backend-status backend-offline";
+
+    }
+
+}
+
+
+/* =====================================================
+   7. MARKET HEADER STATUS
+===================================================== */
+
+function updateSystemStatus(data) {
+
+    const marketOpen =
+        data.market_open !== false;
+
+    const aiActive =
+        data.ai_active !== false;
+
+
+    element("marketStatus").textContent =
+        marketOpen
+            ? "OPEN"
+            : "CLOSED";
+
+
+    element("aiStatus").textContent =
+        aiActive
+            ? "ACTIVE"
+            : "OFFLINE";
+
+
+    const marketDot =
+        element("marketDot");
+
+    const aiDot =
+        element("aiDot");
+
+
+    if (marketOpen) {
+
+        marketDot.classList.remove("red");
+
+    }
+
+    else {
+
+        marketDot.classList.add("red");
+
+    }
+
+
+    if (aiActive) {
+
+        aiDot.classList.remove("red");
+
+    }
+
+    else {
+
+        aiDot.classList.add("red");
+
+    }
+
+}
+
+
+/* =====================================================
+   8. UPDATE PORTFOLIO
+===================================================== */
+
+function updatePortfolio(portfolio) {
+
+    if (!portfolio) return;
+
+
+    element("portfolioValue").textContent =
+        money(
+            portfolio.total_value
+        );
+
+
+    element("availableCapital").textContent =
+        money(
+            portfolio.available_capital
+        );
+
+
+    element("todayPnl").textContent =
+        money(
+            portfolio.today_pnl
+        );
+
+
+    element("exposure").textContent =
+        percentage(
+            portfolio.exposure
+        );
+
+
+    element("overallRisk").textContent =
+        portfolio.risk_score !== undefined
+
+            ? Number(
+                portfolio.risk_score
+              ).toFixed(1) + " / 10"
+
+            : "--";
+
+
+    const change =
+        Number(
+            portfolio.portfolio_change || 0
+        );
+
+
+    const changeElement =
+        element("portfolioChange");
+
+
+    changeElement.textContent =
+        (change >= 0 ? "+" : "") +
+        change.toFixed(1) +
+        "% " +
+        (change >= 0 ? "▲" : "▼");
+
+
+    if (change >= 0) {
+
+        changeElement.style.color =
+            "var(--green)";
+
+    }
+
+    else {
+
+        changeElement.style.color =
+            "var(--red)";
+
+    }
+
+
+    const pnl =
+        Number(
+            portfolio.today_pnl || 0
+        );
+
+
+    if (pnl >= 0) {
+
+        element("todayPnl")
+            .style.color =
+            "var(--green)";
+
+    }
+
+    else {
+
+        element("todayPnl")
+            .style.color =
+            "var(--red)";
+
+    }
+
+}
+
+
+/* =====================================================
+   9. UPDATE MARKET
+===================================================== */
+
+function updateMarket(market) {
+
+    if (!market) return;
+
+
+    element("symbol").textContent =
+        market.symbol ||
+        "BTC / USDT";
+
+
+    const price =
+        Number(
+            market.price
+        );
+
+
+    element("marketPrice").textContent =
+        money(price);
+
+
+    element("currentPrice").textContent =
+        money(price);
+
+
+    const change =
+        Number(
+            market.change || 0
+        );
+
+
+    const changeElement =
+        element("marketChange");
+
+
+    changeElement.textContent =
+        "(" +
+        (change >= 0 ? "+" : "") +
+        change.toFixed(2) +
+        "%)";
+
+
+    if (change >= 0) {
+
+        changeElement.style.color =
+            "var(--green)";
+
+    }
+
+    else {
+
+        changeElement.style.color =
+            "var(--red)";
+
+    }
+
+
+    element("volume").textContent =
+        "VOL: " +
+        (market.volume ?? "--");
+
+
+    element("volatility").textContent =
+        "VOLATILITY: " +
+        (market.volatility ?? "--") +
+        "%";
+
+
+    element("liquidity").textContent =
+        "LIQUIDITY: " +
+        (market.liquidity ?? "--");
+
+
+    element("trend").textContent =
+        "TREND: " +
+        (market.trend ?? "--");
+
+
+    if (
+        market.trend &&
+        market.trend
+            .toUpperCase()
+            .includes("BULL")
+    ) {
+
+        element("trend").style.color =
+            "var(--green)";
+
+    }
+
+    else if (
+        market.trend &&
+        market.trend
+            .toUpperCase()
+            .includes("BEAR")
+    ) {
+
+        element("trend").style.color =
+            "var(--red)";
+
+    }
+
+}
+
+
+/* =====================================================
+   10. GENERATE GRAPH
+===================================================== */
+
+function updateGraph(prices) {
+
+    if (
+        !prices ||
+        !Array.isArray(prices) ||
+        prices.length < 2
+    ) {
+
+        return;
+
+    }
+
+
+    const validPrices =
+        prices
+            .map(Number)
+            .filter(Number.isFinite);
+
+
+    if (validPrices.length < 2) {
+
+        return;
+
+    }
+
+
+    const width = 1000;
+
+    const height = 300;
+
+
+    const min =
+        Math.min(
+            ...validPrices
+        );
+
+
+    const max =
+        Math.max(
+            ...validPrices
+        );
+
+
+    const range =
+        max - min || 1;
+
+
+    let linePath = "";
+
+
+    validPrices.forEach(
+        (price, index) => {
+
+
+            const x =
+                (
+                    index /
+                    (validPrices.length - 1)
+                ) * width;
+
+
+            const y =
+                height -
+                (
+                    (
+                        price - min
+                    ) /
+                    range
+                ) *
+                (
+                    height - 40
+                );
+
+
+            linePath +=
+                (
+                    index === 0
+                        ? "M"
+                        : "L"
+                ) +
+                x.toFixed(2) +
+                " " +
+                y.toFixed(2) +
+                " ";
+
+        }
+    );
+
+
+    const areaPath =
+        linePath +
+        "L " +
+        width +
+        " " +
+        height +
+        " L 0 " +
+        height +
+        " Z";
+
+
+    element("graphLine")
+        .setAttribute(
+            "d",
+            linePath
+        );
+
+
+    element("graphArea")
+        .setAttribute(
+            "d",
+            areaPath
+        );
+
+
+    updatePriceAxis(
+        min,
+        max
+    );
+
+
+    updateTimeAxis(
+        validPrices.length
+    );
+
+}
+
+
+/* =====================================================
+   11. PRICE AXIS
+===================================================== */
+
+function updatePriceAxis(
+    min,
+    max
+) {
+
+    const axis =
+        element("priceAxis");
+
+
+    const range =
+        max - min || 1;
+
+
+    const values = [
+
+        max,
+
+        max -
+            range * 0.25,
+
+        max -
+            range * 0.50,
+
+        max -
+            range * 0.75,
+
+        min
+
+    ];
+
+
+    axis.innerHTML = "";
+
+
+    values.forEach(
+        value => {
+
+
+            const span =
+                document.createElement(
+                    "span"
+                );
+
+
+            span.textContent =
+                "$" +
+                Math.round(
+                    value
+                ).toLocaleString();
+
+
+            axis.appendChild(
+                span
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   12. TIME AXIS
+===================================================== */
+
+function updateTimeAxis(count) {
+
+    const axis =
+        element("timeAxis");
+
+
+    axis.innerHTML = "";
+
+
+    const now =
+        new Date();
+
+
+    const labels = 7;
+
+
+    for (
+        let i = 0;
+        i < labels;
+        i++
+    ) {
+
+
+        const span =
+            document.createElement(
+                "span"
+            );
+
+
+        const minutesAgo =
+            (
+                labels - 1 - i
+            ) *
+            Math.max(
+                1,
+                Math.floor(
+                    60 /
+                    (labels - 1)
+                )
+            );
+
+
+        const time =
+            new Date(
+                now.getTime() -
+                minutesAgo * 60000
+            );
+
+
+        span.textContent =
+            time.toLocaleTimeString(
+                "en-US",
+                {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                }
+            );
+
+
+        axis.appendChild(
+            span
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   13. UPDATE AI DECISION
+===================================================== */
+
+function updateDecision(decision) {
+
+    if (!decision) return;
+
+
+    const action =
+        (
+            decision.action ||
+            "WAIT"
+        ).toUpperCase();
+
+
+    const actionElement =
+        element("decisionAction");
+
+
+    actionElement.textContent =
+        action;
+
+
+    if (
+        action.includes("BUY")
+    ) {
+
+        actionElement.style.color =
+            "var(--green)";
+
+        actionElement.style.borderColor =
+            "var(--green)";
+
+        actionElement.style.background =
+            "rgba(0,245,160,0.12)";
+
+    }
+
+    else if (
+        action.includes("SELL")
+    ) {
+
+        actionElement.style.color =
+            "var(--red)";
+
+        actionElement.style.borderColor =
+            "var(--red)";
+
+        actionElement.style.background =
+            "rgba(255,69,69,0.12)";
+
+    }
+
+    else {
+
+        actionElement.style.color =
+            "#ffaa00";
+
+        actionElement.style.borderColor =
+            "#ffaa00";
+
+        actionElement.style.background =
+            "rgba(255,170,0,0.12)";
+
+    }
+
+
+    element("confidence").textContent =
+        percentage(
+            decision.confidence
+        );
+
+
+    const expected =
+        Number(
+            decision.expected_return || 0
+        );
+
+
+    element("expectedReturn").textContent =
+        (
+            expected >= 0
+                ? "+"
+                : ""
+        ) +
+        expected.toFixed(2) +
+        "%";
+
+
+    const risk =
+        Number(
+            decision.risk_score
+        );
+
+
+    element("decisionRisk").textContent =
+        Number.isFinite(risk)
+
+            ? risk.toFixed(1) +
+              "/10"
+
+            : "--";
+
+
+    element("allocation").textContent =
+        decision.allocation !== undefined
+
+            ? Number(
+                decision.allocation
+              ).toFixed(1) +
+              "% Cap"
+
+            : "--";
+
+
+    element("reason").textContent =
+        decision.reason ||
+        "No reasoning information received from AI backend.";
+
+}
+
+
+/* =====================================================
+   14. UPDATE AI AGENTS
+===================================================== */
+
+function updateAgents(agents) {
+
+    const container =
+        element("agentsContainer");
+
+
+    container.innerHTML = "";
+
+
+    if (
+        !agents ||
+        !Array.isArray(agents)
+    ) {
+
+        return;
+
+    }
+
+
+    agents.forEach(
+        agent => {
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "agent";
+
+
+            const top =
+                document.createElement(
+                    "div"
+                );
+
+
+            top.className =
+                "agent-top";
+
+
+            const name =
+                document.createElement(
+                    "span"
+                );
+
+
+            name.textContent =
+                agent.name ||
+                "Unknown Agent";
+
+
+            const dot =
+                document.createElement(
+                    "span"
+                );
+
+
+            dot.className =
+                "agent-dot";
+
+
+            dot.textContent =
+                "●";
+
+
+            const status =
+                (
+                    agent.status ||
+                    "ACTIVE"
+                ).toUpperCase();
+
+
+            if (
+                status === "ACTIVE"
+            ) {
+
+                dot.style.color =
+                    "var(--green)";
+
+            }
+
+            else {
+
+                dot.style.color =
+                    "var(--red)";
+
+            }
+
+
+            top.appendChild(
+                name
+            );
+
+
+            top.appendChild(
+                dot
+            );
+
+
+            const description =
+                document.createElement(
+                    "div"
+                );
+
+
+            description.className =
+                "agent-description";
+
+
+            description.textContent =
+                agent.description ||
+                "Processing";
+
+
+            const confidence =
+                document.createElement(
+                    "div"
+                );
+
+
+            confidence.className =
+                "agent-confidence";
+
+
+            confidence.textContent =
+                Number(
+                    agent.confidence || 0
+                ).toFixed(1) +
+                "% Conf";
+
+
+            card.appendChild(
+                top
+            );
+
+
+            card.appendChild(
+                description
+            );
+
+
+            card.appendChild(
+                confidence
+            );
+
+
+            container.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   15. UPDATE SYSTEM ACTIVITY
+===================================================== */
+
+function updateActivity(activity) {
+
+    const container =
+        element("activityContainer");
+
+
+    container.innerHTML = "";
+
+
+    if (
+        !activity ||
+        !Array.isArray(activity)
+    ) {
+
+        return;
+
+    }
+
+
+    activity
+        .slice(0, 6)
+        .forEach(
+            item => {
+
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                div.className =
+                    "activity-item";
+
+
+                const time =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                time.className =
+                    "activity-time";
+
+
+                time.textContent =
+                    item.time ||
+                    "--:--:--";
+
+
+                const message =
+                    document.createElement(
+                        "span"
+                    );
+
+
+                if (
+                    item.highlight
+                ) {
+
+                    message.className =
+                        "activity-highlight";
+
+                }
+
+
+                message.textContent =
+                    item.message ||
+                    "System event";
+
+
+                div.appendChild(
+                    time
+                );
+
+
+                div.appendChild(
+                    message
+                );
+
+
+                container.appendChild(
+                    div
+                );
+
+            }
+        );
+
+}
+
+
+/* =====================================================
+   16. ADMIN DROPDOWN
+===================================================== */
+
+const adminProfile =
+    document.getElementById(
+        "adminProfile"
+    );
+
+
+const adminMenu =
+    document.getElementById(
+        "adminMenu"
+    );
+
+
+/* OPEN / CLOSE ADMIN MENU */
+
+adminProfile.addEventListener(
+    "click",
+    function(event) {
+
+
+        event.stopPropagation();
+
+
+        adminMenu.classList.toggle(
+            "show"
+        );
+
+
+        adminProfile.classList.toggle(
+            "active"
+        );
+
+
+    }
+);
+
+
+/* CLOSE WHEN CLICKING OUTSIDE */
+
+document.addEventListener(
+    "click",
+    function(event) {
+
+
+        if (
+            !adminProfile.contains(
+                event.target
+            ) &&
+            !adminMenu.contains(
+                event.target
+            )
+        ) {
+
+
+            adminMenu.classList.remove(
+                "show"
+            );
+
+
+            adminProfile.classList.remove(
+                "active"
+            );
+
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   17. ADMIN MENU BUTTONS
+===================================================== */
+
+element("profileBtn")
+    .addEventListener(
+        "click",
+        function() {
+
+            alert(
+                "Admin Profile"
+            );
+
+        }
+    );
+
+
+element("settingsBtn")
+    .addEventListener(
+        "click",
+        function() {
+
+            alert(
+                "System Settings"
+            );
+
+        }
+    );
+
+
+element("logsBtn")
+    .addEventListener(
+        "click",
+        function() {
+
+            alert(
+                "System Logs"
+            );
+
+        }
+    );
+
+
+element("logoutBtn")
+    .addEventListener(
+        "click",
+        function() {
+
+
+            const confirmLogout =
+                confirm(
+                    "Are you sure you want to logout?"
+                );
+
+
+            if (
+                confirmLogout
+            ) {
+
+                window.location.href =
+                    "login.html";
+
+            }
+
+        }
+    );
+
+
+/* =====================================================
+   18. FETCH DATA FROM BACKEND
+===================================================== */
+
+async function loadDashboard() {
+
+    try {
+
+
+        const response =
+            await fetch(
+                API_URL,
+                {
+
+                    method: "GET",
+
+                    headers: {
+
+                        "Accept":
+                            "application/json"
+
+                    },
+
+                    cache: "no-store"
+
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Backend returned HTTP " +
+                response.status
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        setBackendStatus(
+            true
+        );
+
+
+        updateSystemStatus(
+            data
+        );
+
+
+        updatePortfolio(
+            data.portfolio
+        );
+
+
+        updateMarket(
+            data.market
+        );
+
+
+        updateDecision(
+            data.decision
+        );
+
+
+        updateAgents(
+            data.agents
+        );
+
+
+        updateActivity(
+            data.activity
+        );
+
+
+        if (
+            data.market &&
+            data.market.prices
+        ) {
+
+            updateGraph(
+                data.market.prices
+            );
+
+        }
+
+
+        console.log(
+            "CORTEX dashboard updated:",
+            data
+        );
+
+
+    }
+
+    catch (error) {
+
+
+        console.error(
+            "CORTEX backend error:",
+            error
+        );
+
+
+        setBackendStatus(
+            false
+        );
+
+
+        element("marketStatus")
+            .textContent =
+            "OFFLINE";
+
+
+        element("aiStatus")
+            .textContent =
+            "OFFLINE";
+
+
+        element("decisionAction")
+            .textContent =
+            "NO DATA";
+
+
+        element("reason")
+            .textContent =
+            "Unable to receive AI decision from backend. Check that the backend API is running.";
+
+    }
+
+}
+
+
+/* =====================================================
+   19. FIRST LOAD
+===================================================== */
+
+loadDashboard();
+
+
+/* =====================================================
+   20. AUTOMATIC REFRESH
+===================================================== */
+
+setInterval(
+    loadDashboard,
+    REFRESH_INTERVAL
+);
+
 </script>
 
 
 </body>
+
 </html>
