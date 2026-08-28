@@ -134,11 +134,16 @@ Trade execution management<br
 
 ## Technology Stack:
 Frontend:
-HTML
-CSS
-Javascript
-Tailwind CSS
-Google stitch
+HTML<br>
+CSS<br>
+Javascript<br>
+Tailwind CSS<br>
+Google stitch<br>
+
+Backend:
+Springboot<br>
+News API<br>
+ELeven labs<br>
 
 
 
