@@ -145,6 +145,9 @@ Springboot<br>
 News API<br>
 ELeven labs<br>
 
+Machine learning model :
+Python<br>
+
 
 
 ## Conclusion:
